@@ -1,8 +1,8 @@
-# Machine Learning Final Project
+# Proyecto final Machine Learning
 
-This is the final project of our Machine Learning bootcamp, where we demonstrate the skills and knowledge acquired throughout our studies. Throughout this bootcamp, we have studied different models based on projects of different areas and types. Now it's time to create our own project using the algorithm that we think is best suited to our problem.
+Este es el proyecto final de nuestro bootcamp de Machine Learning, donde demostramos las habilidades y conocimientos adquiridos a lo largo de nuestros estudios. A lo largo de este bootcamp, hemos estudiado diferentes modelos basados en proyectos de diferentes áreas y tipos. Ahora es el momento de crear nuestro propio proyecto utilizando el algoritmo que creemos que se adapta mejor a nuestro problema.
 
-We will have to find a suitable dataset to work with, process it, train a model and finally make it available for consumption.
+Tendremos que encontrar un conjunto de datos adecuado para trabajar, procesarlo, entrenar un modelo y, finalmente, ponerlo a disposición para su consumo.
 
 > *"Hard work always beats talent when talent doesn't work hard"* - Tim Notke
 
@@ -19,9 +19,9 @@ We will have to find a suitable dataset to work with, process it, train a model 
 > - **Mentor:** [Ing. Héctor Chocobar Torrejón](https://github.com/hchocobar/)
 > - **Teacher Assitant:** [Beatriz Solana Ros](https://github.com/mezcolantriz)
 
-## 🎯 Project Goal
+## 🎯 Objetivo del proyecto
 <p align="justify">
-El objetivo de este proyecto es diseñar y entrenar un modelo de Machine Learning aplicado a la gestion farmaceutica, capaz de proyectar la demanda futura de cada producto de la farmacia para el año 2026, utilizando como base el histórico de ventas del año 2025. El modelo busca incorporar variables claves como la estacionalidad, el producto, el rubro, la presentación del producto y los patrones de consumo de los clientes, para estimar con mayor precisión cuántas unidades será necesario disponer en stock en cada período.
+- El objetivo de este proyecto es diseñar y entrenar un modelo de Machine Learning aplicado a la gestion farmaceutica, capaz de proyectar la demanda futura de cada producto de la farmacia para el año 2026, utilizando como base el histórico de ventas del año 2025. El modelo busca incorporar variables claves como la estacionalidad, el producto, el rubro, la presentación del producto y los patrones de consumo de los clientes, para estimar con mayor precisión cuántas unidades será necesario disponer en stock en cada período.
 
 De esta manera, se apunta a transformar la gestión de inventario en un proceso proactivo y basado en datos, que permita optimizar los niveles de stock, reducir pérdidas por vencimientos, evitar quiebres de productos esenciales y mejorar la rentabilidad general del comercio.
 </p>
@@ -33,14 +33,14 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
 - Desarrollo de aplicaciones Web
 - Resolución de problemas del mundo real a través de técnicas de ML
 
-## 🚀 Project Overview
+## 🚀 Introducción al proyecto
 <p align="justify">
 - Este proyecto tiene como objetivo aplicar técnicas de Machine Learning para mejorar la forma en que una farmacia gestiona su stock. A partir del análisis de las ventas de un año completo (2025) de una farmacia ubicada en la provincia de Buenos Aires, se busca entender cómo se comporta la demanda de los productos y usar esa información para planificar mejor el inventario del año 2026.
 
   La idea principal es pasar de una gestión basada solo en la experiencia a una gestión basada en datos, que permita anticiparse a las necesidades de los clientes, evitar faltantes de productos importantes y reducir el exceso de mercadería en un contexto económico cambiante. Todo el enfoque está pensado desde la realidad del negocio farmacéutico y el comportamiento de consumo de las personas.]*
 </p>
 
-### Problem Statement
+### Nuestro problema
 <p align="justify">
 - En el contexto macroeconómico argentino, atravesado por inflación, inestabilidad en los precios y restricciones en el acceso al financiamiento, la gestión de inventarios se convierte en un factor crítico para la sostenibilidad de cualquier farmacia. La falta de una planificación de stock basada en criterios técnicos y analíticos impacta directamente tanto en la rentabilidad del negocio como en la calidad del servicio prestado a la comunidad.
 
@@ -60,13 +60,14 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
 <p align="justify">
 - El dataset contiene información de registro de ventas durante el año 2025 de una farmacia situada en Argentina, en la provincia de Buenos Aires. El registro se corresponde a los datos de los tickets de venta generados durante todo el año, los días que el comercio estuvo abierto. Teniendo en cuenta que el comercio trabaja de Lunes a Sábados de 8hs a 20 hs, es decir, 12 hs por día, se han generado un total de datos tal que nuestro dataset contiene:
 </p>
+
 - 117.415 filas
-- 20 columnas, con variables categoricas y numericas: ['Fecha', 'Tipo Mov.', 'Fac. Tipo', 'Fac. Suc.', 'Fac. Nun.','Fisc. Numero', 'Tipo Pago', 'Cant.', 'Precio', 'Producto', 'Sub. Total', 'Rubro', 'Cobertura', 'Ajustes', 'Desc. Adic.', 'Total. Cliente', 'IVA', 'Tasa Iva', 'Total Gravado', 'Total sin Gravar'] 
+- 20 columnas, con variables categoricas y numericas como:   ['Fecha', 'Tipo Mov.', 'Fac. Tipo', 'Fac. Suc.', 'Fac. Nun.','Fisc. Numero', 'Tipo Pago', 'Cant.', 'Precio', 'Producto', 'Sub. Total', 'Rubro', 'Cobertura', 'Ajustes', 'Desc. Adic.', 'Total. Cliente', 'IVA', 'Tasa Iva', 'Total Gravado', 'Total sin Gravar'] 
 
 - Más de 7.500 productos distintos
 - Rubro farmacia (medicamentos, insumos médicos, suplementos, vitaminas, salud preventiva) y perfumería y cuidado personal (cremas, protectores, higiene). 
 
-- Se trata de datos reales, con ruido, inconsistencias y heterogeneidad típica del entorno farmacéutico.
+- Se trata de un conjunto de datos reales, lo que implica la presencia de ruido, valores inconsistentes, formatos heterogéneos y registros incompletos, características habituales en fuentes operativas del sector farmacéutico. Esta naturaleza del dataset representó un desafío significativo durante la etapa de data cleaning, ya que fue necesario aplicar múltiples técnicas de depuración, normalización y validación para garantizar la calidad de los datos antes de avanzar con el análisis y el modelado.
 
 
 ### Methodology
