@@ -30,10 +30,14 @@ The goal of this project is to develop a complete end-to-end Machine Learning so
 
 ## 🚀 Project Overview
 
-*[This section will be updated as we define our specific project scope and objectives]*
+*[Este proyecto desarrolla una solución integral de Machine Learning aplicada a la gestión farmacéutica, orientada a la planificación inteligente de stock para el año 2026. A partir del análisis de un año completo de registros de ventas (2025) de una farmacia de la provincia de Buenos Aires, Argentina, se construye un flujo de trabajo donde el objetivo final es optimizar el nivel de inventario, reduciendo quiebres de stock y sobrestock en un contexto de inflación y volatilidad económica con un enfoque estratégico del negocio farmacéutico con base en estacionalidad, patologías y comportamiento del consumidor.]*
 
 ### Problem Statement
-*To be defined - we will identify a real-world problem that can be solved using Machine Learning techniques*
+*En el contexto económico argentino, caracterizado por la inflación, variaciones de los precios y dificultad para financiar inventarios, una mala planificación de stock puede generar pérdidas por vencimientos, pérdida crediticia y de credibilidad ante droguerías, faltantes de productos críticos, exceso de capital inmovilizado en mercadería, incapacidad e ineficiencia del servicio.
+
+👉 Problema real: la farmacia no cuenta con una metodología objetiva para anticipar la demanda futura de sus productos.
+
+🎯 Objetivo: desarrollar un modelo predictivo que permita estimar el stock óptimo por producto para el año 2026, en función del comportamiento histórico de ventas, estacionalidad, tipo de producto y patrones de consumo.*
 
 ### Dataset
 *To be defined - we will acquire a dataset that meets the following minimum requirements:*
