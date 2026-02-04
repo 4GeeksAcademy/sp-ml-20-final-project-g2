@@ -11,8 +11,8 @@ st.title("📦 Forecast de Demanda por Producto")
 # =====================================================
 # CARGA DE MODELO Y DATA BASE (fallback)
 # =====================================================
-model = pickle.load(open("models/71_random_forest_regressor.pkl", "rb"))
-df_base = pickle.load(open("data/processed/df-nuevo.pkl", "rb"))
+model = pickle.load(open("models/72_Cat_Boost_Regressor.pkl", "rb"))
+df_base = pickle.load(open("data/processed/df_72_catboost_extra_column.pkl", "rb"))
 
 # =====================================================
 # LECTURA ROBUSTA CSV (encoding + separador)
