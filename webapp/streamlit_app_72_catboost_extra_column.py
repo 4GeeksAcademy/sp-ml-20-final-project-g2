@@ -18,7 +18,6 @@ df_base = pickle.load(open("data/processed/df_72_catboost_extra_column.pkl", "rb
 # UTILIDADES: FEATURES QUE ESPERA EL MODELO
 # =====================================================
 def get_model_features(model, df_fallback):
-    # CatBoost
     if hasattr(model, "feature_names_"):
         try:
             feats = list(model.feature_names_)
@@ -27,18 +26,16 @@ def get_model_features(model, df_fallback):
         except Exception:
             pass
 
-    # sklearn-style
     if hasattr(model, "feature_names_in_"):
         return list(model.feature_names_in_)
 
-    # fallback: inferir del df_base (evitando columnas típicas no-feature)
     drop_cols = {"y", "week_start", "week_end"}
     return [c for c in df_fallback.columns if c not in drop_cols]
 
 MODEL_FEATURES = get_model_features(model, df_base)
 
 # =====================================================
-# LECTURA ROBUSTA CSV (encoding + separador)
+# LECTURA ROBUSTA CSV
 # =====================================================
 def read_csv_robust(uploaded_file):
     encodings_to_try = ["utf-8", "utf-8-sig", "cp1252", "ISO-8859-1", "latin1"]
@@ -47,13 +44,7 @@ def read_csv_robust(uploaded_file):
     for enc in encodings_to_try:
         try:
             uploaded_file.seek(0)
-            df = pd.read_csv(
-                uploaded_file,
-                encoding=enc,
-                sep=None,
-                engine="python",
-                on_bad_lines="skip"
-            )
+            df = pd.read_csv(uploaded_file, encoding=enc, sep=None, engine="python", on_bad_lines="skip")
 
             if df.shape[1] == 1:
                 uploaded_file.seek(0)
@@ -64,14 +55,13 @@ def read_csv_robust(uploaded_file):
                     df = pd.read_csv(uploaded_file, encoding=enc, sep=",", engine="python", on_bad_lines="skip")
 
             return df
-
         except Exception as e:
             last_error = e
 
     raise last_error
 
 # =====================================================
-# PREPROCESAMIENTO (RAW -> WEEKLY)
+# PREPROCESAMIENTO
 # =====================================================
 def clean_text(x):
     if pd.isna(x):
@@ -89,29 +79,19 @@ def normalize_raw_columns(df_raw):
 
     rename_map = {
         # Cantidad
-        "Cant.": "Cant",
-        "cant.": "Cant",
-        "cantidad": "Cant",
-        "Cantidad": "Cant",
-        "CANTIDAD": "Cant",
-        "CANT": "Cant",
+        "Cant.": "Cant", "cant.": "Cant", "cantidad": "Cant",
+        "Cantidad": "Cant", "CANTIDAD": "Cant", "CANT": "Cant",
 
         # Producto
-        "producto": "Producto",
-        "PRODUCTO": "Producto",
+        "producto": "Producto", "PRODUCTO": "Producto",
 
         # Grupo (acepta plural y variantes)
-        "grupo": "Group",
-        "GRUPO": "Group",
-        "group": "Group",
-        "GROUP": "Group",
-        "groups": "Group",
-        "GROUPS": "Group",
-        "Groups": "Group",
+        "grupo": "Group", "GRUPO": "Group",
+        "group": "Group", "GROUP": "Group",
+        "groups": "Group", "GROUPS": "Group", "Groups": "Group",
 
         # Fecha
-        "fecha": "Fecha",
-        "FECHA": "Fecha",
+        "fecha": "Fecha", "FECHA": "Fecha",
     }
     return df_raw.rename(columns=rename_map)
 
@@ -144,16 +124,53 @@ def preprocess_raw_data(df_raw):
               week_start=("week_start", "min"),
               week_end=("week_end", "max"),
           )
-          .sort_values(["product", "group", "year", "num_semana"])
+          .sort_values(["group", "product", "year", "num_semana"])
           .reset_index(drop=True)
     )
     return df_weekly
 
 def create_lags(df_weekly, n_lags=8):
-    df = df_weekly.sort_values(["product", "group", "year", "num_semana"]).copy()
+    df = df_weekly.sort_values(["group", "product", "year", "num_semana"]).copy()
     for lag in range(1, n_lags + 1):
         df[f"y_lag{lag}"] = df.groupby(["product", "group"])["y"].shift(lag)
     return df.dropna().reset_index(drop=True)
+
+# =====================================================
+# NORMALIZACIÓN FINAL DEL DF_MODEL (CLAVE PARA EL ERROR 'year')
+# =====================================================
+def normalize_df_model(df_model: pd.DataFrame) -> pd.DataFrame:
+    df = df_model.copy()
+
+    # normalizar nombre group
+    if "groups" in df.columns and "group" not in df.columns:
+        df = df.rename(columns={"groups": "group"})
+    if "Group" in df.columns and "group" not in df.columns:
+        df = df.rename(columns={"Group": "group"})
+
+    # asegurar product/group
+    if "product" not in df.columns or "group" not in df.columns:
+        return df
+
+    # asegurar year/num_semana si faltan (de week_start o Fecha)
+    if ("year" not in df.columns) or ("num_semana" not in df.columns):
+        if "week_start" in df.columns:
+            ws = pd.to_datetime(df["week_start"], errors="coerce")
+            iso = ws.dt.isocalendar()
+            df["year"] = iso.year.astype("Int64")
+            df["num_semana"] = iso.week.astype("Int64")
+        elif "Fecha" in df.columns:
+            f = pd.to_datetime(df["Fecha"], errors="coerce", dayfirst=True)
+            iso = f.dt.isocalendar()
+            df["year"] = iso.year.astype("Int64")
+            df["num_semana"] = iso.week.astype("Int64")
+
+    # tipos a int si se puede
+    if "year" in df.columns:
+        df["year"] = pd.to_numeric(df["year"], errors="coerce").astype("Int64")
+    if "num_semana" in df.columns:
+        df["num_semana"] = pd.to_numeric(df["num_semana"], errors="coerce").astype("Int64")
+
+    return df
 
 # =====================================================
 # FORECAST
@@ -167,10 +184,16 @@ def _ensure_model_columns(X: pd.DataFrame) -> pd.DataFrame:
 def forecast_weeks(df_model, model, product, group, n_weeks):
     df_pg = df_model[(df_model["product"] == product) & (df_model["group"] == group)].copy()
 
-    if len(df_pg) < 10:
-        raise ValueError("No hay suficiente historial para esta combinación producto/grupo (mínimo 10 semanas).")
+    # ✅ con lags ya creados, con 1 fila basta para predecir hacia adelante
+    if len(df_pg) < 1:
+        raise ValueError("No hay suficiente historial model-ready (tras lags) para este producto/grupo.")
 
-    df_pg = df_pg.sort_values(["year", "num_semana"]).reset_index(drop=True)
+    # ordenar robusto aunque falte year (pero ya lo normalizamos)
+    sort_cols = ["num_semana"]
+    if "year" in df_pg.columns:
+        sort_cols = ["year", "num_semana"]
+    df_pg = df_pg.sort_values(sort_cols).reset_index(drop=True)
+
     last_row = df_pg.iloc[-1].copy()
 
     last_week_start = pd.to_datetime(last_row.get("week_start", pd.Timestamp.today().normalize()))
@@ -215,11 +238,15 @@ def forecast_weeks(df_model, model, product, group, n_weeks):
 
     return pd.DataFrame(future)
 
-def forecast_all_products(df_model, model, n_weeks, min_hist_weeks=10):
+def forecast_all_products(df_model, model, n_weeks, group_filter=None):
     all_forecasts = []
 
+    df_iter = df_model.copy()
+    if group_filter is not None:
+        df_iter = df_iter[df_iter["group"] == group_filter]
+
     combos = (
-        df_model[["product", "group"]]
+        df_iter[["product", "group"]]
         .drop_duplicates()
         .sort_values(["group", "product"])
         .itertuples(index=False, name=None)
@@ -227,7 +254,7 @@ def forecast_all_products(df_model, model, n_weeks, min_hist_weeks=10):
 
     for product, group in combos:
         df_pg = df_model[(df_model["product"] == product) & (df_model["group"] == group)]
-        if len(df_pg) < min_hist_weeks:
+        if len(df_pg) < 1:
             continue
 
         try:
@@ -237,7 +264,7 @@ def forecast_all_products(df_model, model, n_weeks, min_hist_weeks=10):
             continue
 
     if not all_forecasts:
-        raise ValueError("No hay combinaciones producto/grupo con suficiente historial para predecir.")
+        raise ValueError("No hay combinaciones producto/grupo con suficiente historial (tras lags) para predecir.")
 
     result = pd.concat(all_forecasts, ignore_index=True)
     return result.sort_values(["group", "product", "year", "num_semana"]).reset_index(drop=True)
@@ -261,18 +288,21 @@ if uploaded_file is not None:
         df_model = create_lags(df_weekly)
 
         st.sidebar.success("Datos crudos procesados correctamente ✅")
-
     except Exception as e:
         st.error(f"❌ Error al leer/procesar el CSV: {e}")
         st.stop()
 else:
     df_model = df_base.copy()
 
-    # normalizar nombre de columna en df_base
-    if "groups" in df_model.columns and "group" not in df_model.columns:
-        df_model = df_model.rename(columns={"groups": "group"})
-    if "Group" in df_model.columns and "group" not in df_model.columns:
-        df_model = df_model.rename(columns={"Group": "group"})
+# ✅ normalizar siempre (arregla el 'year' y nombres de group)
+df_model = normalize_df_model(df_model)
+
+# Validación mínima
+required_cols = {"product", "group"}
+missing = required_cols - set(df_model.columns)
+if missing:
+    st.error(f"El dataset no contiene columnas necesarias: {missing}")
+    st.stop()
 
 # =====================================================
 # UI PRINCIPAL
@@ -280,36 +310,23 @@ else:
 col1, col2 = st.columns(2)
 
 with col1:
-    mode = st.radio(
-        "Modo de predicción",
-        ["Un producto", "Todos los productos"],
-        horizontal=True,
-        key="mode_radio"
-    )
+    mode = st.radio("Modo de predicción", ["Un producto", "Todos los productos"], horizontal=True)
 
 with col2:
-    weeks = st.selectbox(
-        "Horizonte de predicción (semanas)",
-        [1, 2, 4, 8],
-        key="weeks_select"
-    )
+    weeks = st.selectbox("Horizonte de predicción (semanas)", [1, 2, 4, 8])
 
-# ---- Selector opcional de grupo (aplica solo en modo "Un producto")
 ALL_GROUPS_LABEL = "✅ Todos los grupos"
 
-selected_group_filter = None
+# evitar NameError
+product = None
+group = None
+group_filter_all = None
+
 if mode == "Un producto":
-    if "group" not in df_model.columns:
-        st.error("El dataset cargado no contiene la columna 'group' (o 'groups'). Revisa nombres de columnas.")
-        st.stop()
-
     group_options = [ALL_GROUPS_LABEL] + sorted(df_model["group"].dropna().unique().tolist())
-    selected_group = st.selectbox("Filtrar por group (opcional)", group_options, key="group_filter_select")
+    selected_group = st.selectbox("Filtrar por group (opcional)", group_options, key="group_filter_single")
+    selected_group_filter = None if selected_group == ALL_GROUPS_LABEL else selected_group
 
-    if selected_group != ALL_GROUPS_LABEL:
-        selected_group_filter = selected_group
-
-    # productos filtrados por group si aplica
     if selected_group_filter is None:
         product_options = sorted(df_model["product"].dropna().unique().tolist())
     else:
@@ -321,20 +338,20 @@ if mode == "Un producto":
 
     product = st.selectbox("Selecciona producto", product_options, key="product_select_single")
 
-    # si hay filtro de group, el group es único (ese); si no, hay que elegir group para ese producto
     if selected_group_filter is not None:
         group = selected_group_filter
-        st.caption(f"Grupo seleccionado: **{group}**")
+        st.caption(f"Group seleccionado: **{group}**")
     else:
         groups_for_product = sorted(df_model[df_model["product"] == product]["group"].dropna().unique().tolist())
         if not groups_for_product:
-            st.error("Este producto no tiene groups asociados en el dataset.")
+            st.error("Este producto no tiene groups asociados.")
             st.stop()
+        group = st.selectbox("Selecciona group", groups_for_product, key="group_select_single")
 
-        group = st.selectbox("Pertenece al grupo", groups_for_product, key="group_select_single")
 else:
-    product = None
-    group = None
+    group_options = [ALL_GROUPS_LABEL] + sorted(df_model["group"].dropna().unique().tolist())
+    selected_group_all = st.selectbox("Filtrar por group (opcional)", group_options, key="group_filter_all")
+    group_filter_all = None if selected_group_all == ALL_GROUPS_LABEL else selected_group_all
 
 # =====================================================
 # PREDICCIÓN + RESULTADOS
@@ -345,47 +362,26 @@ if st.button("🔮 Predecir demanda"):
             forecast = forecast_weeks(df_model, model, product, group, weeks)
 
             st.subheader(f"📊 Predicción para {product} | {group}")
-
             table = (
                 forecast[["year", "num_semana", "week_start", "week_end", "y"]]
-                .rename(columns={
-                    "year": "Año",
-                    "num_semana": "Semana",
-                    "week_start": "Desde",
-                    "week_end": "Hasta",
-                    "y": "Demanda estimada"
-                })
+                .rename(columns={"year": "Año", "num_semana": "Semana", "week_start": "Desde", "week_end": "Hasta", "y": "Demanda estimada"})
             )
-
             st.dataframe(table)
             st.line_chart(forecast.set_index(["year", "num_semana"])["y"])
 
             csv = table.to_csv(index=False).encode("utf-8")
-            st.download_button(
-                "⬇️ Descargar forecast (CSV)",
-                csv,
-                f"forecast_{product}_{group}_{weeks}w.csv",
-                "text/csv"
-            )
+            st.download_button("⬇️ Descargar forecast (CSV)", csv, f"forecast_{product}_{group}_{weeks}w.csv", "text/csv")
 
         else:
-            forecast_all = forecast_all_products(df_model, model, n_weeks=weeks)
+            forecast_all = forecast_all_products(df_model, model, n_weeks=weeks, group_filter=group_filter_all)
 
-            st.subheader(f"📦 Predicción para TODOS los productos/grupos ({weeks} semanas)")
+            label_group = "TODOS" if group_filter_all is None else group_filter_all
+            st.subheader(f"📦 Predicción ({label_group}) – {weeks} semanas")
 
             table = (
                 forecast_all[["product", "group", "year", "num_semana", "week_start", "week_end", "y"]]
-                .rename(columns={
-                    "product": "Producto",
-                    "group": "Group",
-                    "year": "Año",
-                    "num_semana": "Semana",
-                    "week_start": "Desde",
-                    "week_end": "Hasta",
-                    "y": "Demanda estimada"
-                })
+                .rename(columns={"product": "Producto", "group": "Group", "year": "Año", "num_semana": "Semana", "week_start": "Desde", "week_end": "Hasta", "y": "Demanda estimada"})
             )
-
             st.dataframe(table)
 
             resumen = (
@@ -394,17 +390,12 @@ if st.button("🔮 Predecir demanda"):
                 .reset_index()
                 .rename(columns={"product": "Producto", "group": "Group", "y": f"Demanda total ({weeks} semanas)"})
             )
-
             st.subheader("🔥 Ranking (Producto + Group) por demanda total")
             st.dataframe(resumen.head(25))
 
             csv = table.to_csv(index=False).encode("utf-8")
-            st.download_button(
-                "⬇️ Descargar forecast completo (CSV)",
-                csv,
-                f"forecast_all_products_groups_{weeks}w.csv",
-                "text/csv"
-            )
+            suffix = "ALL" if group_filter_all is None else f"GROUP_{group_filter_all}"
+            st.download_button("⬇️ Descargar forecast completo (CSV)", csv, f"forecast_all_{suffix}_{weeks}w.csv", "text/csv")
 
     except Exception as e:
         st.error(str(e))
