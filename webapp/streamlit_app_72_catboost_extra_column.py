@@ -266,6 +266,7 @@ if mode == "Un producto":
         sorted(df_model["product"].unique()),
         key="product_select_single"
     )
+
 else:
     product = None
 
