@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import pickle
 import re
+import json
+import os
 
 # =====================================================
 # CONFIGURACIÓN STREAMLIT
@@ -14,6 +16,28 @@ st.title("📦 Forecast de Demanda por Producto / Grupo")
 # =====================================================
 model = pickle.load(open("models/72_Cat_Boost_Regressor.pkl", "rb"))
 df_base = pickle.load(open("data/processed/df_72_catboost_extra_column.pkl", "rb"))
+
+# Construir ruta absoluta basada en la ubicación del script
+base_dir = os.path.dirname(os.path.abspath(__file__))
+json_path = os.path.join(base_dir, "..", "models", "category_keywords.json")
+
+if not os.path.exists(json_path):
+    st.error(f"❌ No encuentro el JSON en: {json_path}")
+    st.stop()
+
+with open(json_path, "r", encoding="utf-8") as f:
+    category_keywords = json.load(f)
+
+# =====================================================
+# MAPPING product -> groups (desde df_base, sin tocar EDA)
+# =====================================================
+product_to_group = (
+    df_base[["product", "groups"]]
+    .dropna()
+    .drop_duplicates(subset=["product"])
+    .set_index("product")["groups"]
+    .to_dict()
+)
 
 # =====================================================
 # UTILIDADES: FEATURES QUE ESPERA EL MODELO
@@ -74,6 +98,14 @@ def clean_text(x):
     )
     return x
 
+def assign_category(name: str, category_keywords: dict) -> str:
+    s = str(name).lower()
+    for category, keywords in category_keywords.items():
+        for kw in keywords:
+            if kw in s:
+                return category
+    return "Otros"
+
 def normalize_raw_columns(df_raw):
     df_raw = df_raw.copy()
     df_raw.columns = df_raw.columns.str.strip()
@@ -99,25 +131,36 @@ def normalize_raw_columns(df_raw):
 def preprocess_raw_data(df_raw):
     df = df_raw.copy()
 
-    required_cols = {"Fecha", "Producto", "Group", "Cant"}
+    # ✅ Solo columnas que vienen del raw
+    required_cols = {"Fecha", "Producto", "Cant"}
     if not required_cols.issubset(df.columns):
         missing = required_cols - set(df.columns)
         raise ValueError(f"Faltan columnas obligatorias: {missing}")
 
+    # Tipos
     df["Fecha"] = pd.to_datetime(df["Fecha"], errors="coerce", dayfirst=True)
     df["Cant"] = pd.to_numeric(df["Cant"], errors="coerce")
-    df = df.dropna(subset=["Fecha", "Producto", "Group", "Cant"])
 
+    # ✅ NUNCA pedir Group aquí
+    df = df.dropna(subset=["Fecha", "Producto", "Cant"])
+
+    # Producto limpio (para el modelo)
     df["product"] = df["Producto"].apply(clean_text)
-    df["group"] = df["Group"].apply(clean_text)
 
+    # ✅ group derivado desde Producto usando el JSON category_keywords
+    df["group"] = df["Producto"].apply(lambda x: assign_category(x, category_keywords))
+    df["groups"] = df["group"]  # por compatibilidad si algo usa 'groups'
+
+    # Semana ISO
     iso = df["Fecha"].dt.isocalendar()
     df["year"] = iso.year.astype(int)
     df["num_semana"] = iso.week.astype(int)
 
+    # week_start / week_end
     df["week_start"] = (df["Fecha"] - pd.to_timedelta(df["Fecha"].dt.weekday, unit="D")).dt.normalize()
     df["week_end"] = df["week_start"] + pd.Timedelta(days=6)
 
+    # Agregado semanal
     df_weekly = (
         df.groupby(["product", "group", "year", "num_semana"], as_index=False)
           .agg(
@@ -128,6 +171,7 @@ def preprocess_raw_data(df_raw):
           .sort_values(["group", "product", "year", "num_semana"])
           .reset_index(drop=True)
     )
+
     return df_weekly
 
 def create_lags(df_weekly, n_lags=8):
