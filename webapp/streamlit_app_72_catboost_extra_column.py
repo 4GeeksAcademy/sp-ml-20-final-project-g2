@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pickle
+import re
 
 # =====================================================
 # CONFIGURACIÓN STREAMLIT
@@ -273,6 +274,67 @@ def forecast_all_products(df_model, model, n_weeks, group_filter=None):
 # SIDEBAR – CARGA CSV CRUDO
 # =====================================================
 st.sidebar.header("📂 Datos de entrada")
+
+with st.sidebar.expander("ℹ️ Instrucciones para subir el CSV", expanded=False):
+    st.markdown(
+        """
+### 📄 Formato del archivo
+- Tipo: **.csv**
+- Separador: **coma (,)** o **punto y coma (;)**
+- Fechas: formato recomendado **dd/mm/aaaa** (ej: 12/02/2026)
+
+---
+
+### ✅ Columnas necesarias (el archivo debe contenerlas)
+El CSV debe incluir **al menos** estas columnas (el orden no importa):
+
+- **Fecha** → fecha de la operación / venta  
+- **Producto** → nombre del producto  
+- **Rubro** → grupo o categoría del producto  
+- **Cant.** → cantidad vendida (número)
+
+👉 El resto de columnas pueden estar presentes, pero **no son obligatorias** para el forecast.
+
+---
+
+### 📋 Columnas habituales admitidas
+Tu archivo puede contener, entre otras, las siguientes columnas (se aceptan sin problema):
+
+- Tipo Mov.  
+- Fac. Tipo  
+- Fac. Suc.  
+- Fac. Nun.  
+- Fisc. Numero  
+- Tipo Pago  
+- Precio  
+- Sub. Total  
+- Cobertura  
+- Ajustes  
+- Desc. Adic.  
+- Total. Cliente  
+- IVA  
+- Tasa Iva  
+- Total Gravado  
+- Total sin Gravar  
+
+Estas columnas **se ignoran automáticamente** si no son necesarias para la predicción.
+
+---
+
+### 🧠 Recomendaciones
+- Una fila puede representar una venta o un movimiento diario.
+- Puede haber varias filas del mismo producto y día (se agregan automáticamente).
+- Evita valores vacíos en **Fecha**, **Producto**, **Rubro** y **Cant.**.
+- No pasa nada si hay columnas adicionales o información contable.
+
+---
+
+### ⚠️ Problemas comunes
+- Si al cargar el archivo todo aparece en una sola columna, revisa el **separador** (coma vs punto y coma).
+- Si la predicción falla, revisa que los nombres de las columnas estén bien escritos.
+        """
+    )
+
 uploaded_file = st.sidebar.file_uploader("Sube tu CSV de ventas (raw)", type=["csv"])
 
 if uploaded_file is not None:
@@ -362,40 +424,161 @@ if st.button("🔮 Predecir demanda"):
             forecast = forecast_weeks(df_model, model, product, group, weeks)
 
             st.subheader(f"📊 Predicción para {product} | {group}")
-            table = (
-                forecast[["year", "num_semana", "week_start", "week_end", "y"]]
-                .rename(columns={"year": "Año", "num_semana": "Semana", "week_start": "Desde", "week_end": "Hasta", "y": "Demanda estimada"})
-            )
-            st.dataframe(table)
-            st.line_chart(forecast.set_index(["year", "num_semana"])["y"])
 
-            csv = table.to_csv(index=False).encode("utf-8")
-            st.download_button("⬇️ Descargar forecast (CSV)", csv, f"forecast_{product}_{group}_{weeks}w.csv", "text/csv")
+            # 1) Tabla para mostrar (solo UI)
+            table_show_single = (
+                forecast[["year", "num_semana", "week_start", "week_end", "y"]]
+                .rename(columns={
+                    "year": "Año",
+                    "num_semana": "Semana",
+                    "week_start": "Desde",
+                    "week_end": "Hasta",
+                    "y": "Demanda estimada"
+                })
+                .reset_index(drop=True)
+            )
+
+            st.dataframe(table_show_single, hide_index=True)
+
+            # 2) DF para gráfico (separado) - índice simple
+            # --- KPIs + gráfico bonito (funciona igual con 1 o 8 semanas)
+            kpi_total = int(forecast["y"].sum())
+            kpi_media = float(forecast["y"].mean())
+            idx_max = forecast["y"].idxmax()
+            kpi_max = int(forecast.loc[idx_max, "y"])
+            idx_max = forecast["y"].idxmax()
+
+            desde_max = pd.to_datetime(forecast.loc[idx_max, "week_start"]).strftime("%d/%m/%Y")
+            hasta_max = pd.to_datetime(forecast.loc[idx_max, "week_end"]).strftime("%d/%m/%Y")
+            valor_max = int(forecast.loc[idx_max, "y"])
+
+            st.caption("Total horizonte")
+            st.markdown(f"### {kpi_total}")
+
+            st.caption("Media semanal")
+            st.markdown(f"### {kpi_media:.1f}")
+
+            st.caption("Semana pico")
+            st.markdown(f"### {desde_max} → {hasta_max} • {valor_max}")
+
+            # Barras por semana (muy legible, incluso con 1 semana)
+            bars_df = forecast[["week_start", "week_end", "y"]].copy()
+
+            ws = pd.to_datetime(bars_df["week_start"])
+            we = pd.to_datetime(bars_df["week_end"])
+
+            bars_df["periodo"] = (
+                ws.dt.strftime("%d")
+                + "–"
+                + we.dt.strftime("%d %b")
+            )
+
+            bars_df = bars_df.set_index("periodo")[["y"]]
+
+            st.subheader("📊 Forecast semanal")
+
+            if len(bars_df) == 1:
+                left, center, right = st.columns([5, 2, 5])
+
+                with center:
+                    periodo_unico = bars_df.index[0]
+                    valor_unico = int(bars_df["y"].iloc[0])
+
+                    desde = pd.to_datetime(forecast["week_start"].iloc[0]).strftime("%d/%m/%Y")
+                    hasta = pd.to_datetime(forecast["week_end"].iloc[0]).strftime("%d/%m/%Y")
+                    st.metric(label=f"Forecast ({desde} → {hasta})", value=valor_unico)
+                    st.bar_chart(bars_df)
+
+            else:
+                st.bar_chart(bars_df)
+
+            # 3) CSV (separado de lo mostrado)
+            csv_bytes = table_show_single.copy().to_csv(index=False).encode("utf-8")
+
+            # 🔒 filename seguro (evita .html por caracteres raros)
+            safe_product = re.sub(r"[^A-Za-z0-9._-]+", "_", str(product))
+            safe_group = re.sub(r"[^A-Za-z0-9._-]+", "_", str(group))
+            filename = f"forecast_{safe_product}_{safe_group}_{weeks}w.csv"
+
+            st.download_button(
+                label="⬇️ Descargar forecast (CSV)",
+                data=csv_bytes,
+                file_name=filename,
+                mime="text/csv"
+            )
 
         else:
-            forecast_all = forecast_all_products(df_model, model, n_weeks=weeks, group_filter=group_filter_all)
+            forecast_all = forecast_all_products(
+                df_model, model, n_weeks=weeks, group_filter=group_filter_all
+            )
 
             label_group = "TODOS" if group_filter_all is None else group_filter_all
             st.subheader(f"📦 Predicción ({label_group}) – {weeks} semanas")
 
-            table = (
+            table_all = (
                 forecast_all[["product", "group", "year", "num_semana", "week_start", "week_end", "y"]]
-                .rename(columns={"product": "Producto", "group": "Group", "year": "Año", "num_semana": "Semana", "week_start": "Desde", "week_end": "Hasta", "y": "Demanda estimada"})
+                .rename(columns={
+                    "product": "Producto",
+                    "group": "Group",
+                    "year": "Año",
+                    "num_semana": "Semana",
+                    "week_start": "Desde",
+                    "week_end": "Hasta",
+                    "y": "Demanda estimada"
+                })
+                .reset_index(drop=True)
             )
-            st.dataframe(table)
 
+            # Tabla UI
+            st.dataframe(table_all, hide_index=True)
+
+            # 📊 Top productos por demanda total (barras)
+            TOP_N = 10
+
+            top_products = (
+                forecast_all
+                .groupby("product", as_index=False)["y"]
+                .sum()
+                .sort_values("y", ascending=False)
+                .head(TOP_N)
+            )
+
+            top_products = top_products.rename(columns={
+                "product": "Producto",
+                "y": f"Demanda total ({weeks} semanas)"
+            })
+
+            st.subheader(f"📊 Top {TOP_N} productos por demanda total")
+            st.bar_chart(
+                top_products.set_index("Producto")
+            )
+
+            # Ranking (si lo quieres)
             resumen = (
                 forecast_all.groupby(["product", "group"])["y"].sum()
                 .sort_values(ascending=False)
                 .reset_index()
-                .rename(columns={"product": "Producto", "group": "Group", "y": f"Demanda total ({weeks} semanas)"})
+                .rename(columns={
+                    "product": "Producto",
+                    "group": "Group",
+                    "y": f"Demanda total ({weeks} semanas)"
+                })
             )
             st.subheader("🔥 Ranking (Producto + Group) por demanda total")
-            st.dataframe(resumen.head(25))
+            st.dataframe(resumen.head(25).reset_index(drop=True), hide_index=True)
 
-            csv = table.to_csv(index=False).encode("utf-8")
-            suffix = "ALL" if group_filter_all is None else f"GROUP_{group_filter_all}"
-            st.download_button("⬇️ Descargar forecast completo (CSV)", csv, f"forecast_all_{suffix}_{weeks}w.csv", "text/csv")
+            # CSV separado
+            csv_all_bytes = table_all.copy().to_csv(index=False).encode("utf-8")
+            suffix_raw = "ALL" if group_filter_all is None else f"GROUP_{group_filter_all}"
+            suffix_safe = re.sub(r"[^A-Za-z0-9._-]+", "_", str(suffix_raw))
+            filename_all = f"forecast_all_{suffix_safe}_{weeks}w.csv"
+
+            st.download_button(
+                label="⬇️ Descargar forecast completo (CSV)",
+                data=csv_all_bytes,
+                file_name=filename_all,
+                mime="text/csv"
+            )
 
     except Exception as e:
         st.error(str(e))
