@@ -57,6 +57,7 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
 </p>
 
 
+
 ## ➖ DATASET
 <p align="justify">
 - El dataset contiene información de registro de ventas durante el año 2025 de una farmacia situada en Argentina, en la provincia de Buenos Aires. El registro se corresponde a los datos de los tickets de venta generados durante todo el año, los días que el comercio estuvo abierto. Teniendo en cuenta que el comercio trabaja de Lunes a Sábados de 8hs a 20 hs, es decir, 12 hs por día, se han generado un total de datos tal que nuestro dataset contiene:
@@ -74,7 +75,8 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
 
 
 
-### ➖ METODOLOGÍA 
+
+## ➖ METODOLOGÍA 
 
 🔸 *Importación de librerías y cargado de dataset*
 
