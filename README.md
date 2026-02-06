@@ -131,9 +131,13 @@ En conjunto, la ausencia de una gestión profesional del inventario compromete s
 
 ### 🔽 Paso 2: Adquisición y carga de datos
 
-- Los datos fueron obtenidos desde un archivo CSV que son registros reales de ventas de una farmacia durante el año 2025.
+- Los datos provienen de un software real utilizado en farmacias argentinas:
+✔️ El sistema exporta archivos en formato Excel encriptado. Se realizó un proceso previo de desencriptado y conversión a CSV.
+✔️ Luego se cargaron en Python usando Pandas creando un Dataframe.
 
-El dataset fue generado y descargado desde un software local que se utiliza en las farmacias en Argentina, el mismo arroja un archivo extension Excel, que fue desencriptado para poder pasarlo a .csv para luego cargarlo en Python utilizando Pandas. Se realizó una inspección inicial para comprender su estructura, tipos de datos y calidad.
+- En esta etapa se inspeccionaron columnas, verificaron tipos de datos y se evaluó la calidad inicial (nulos, duplicados).
+
+👉 Resultado: un dataset crudo listo para limpieza y análisis.
 
 ### 🔽 Paso 3: Almacenamiento de datos
 
