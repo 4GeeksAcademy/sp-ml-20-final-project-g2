@@ -61,40 +61,37 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
 - El dataset contiene información de registro de ventas durante el año 2025 de una farmacia situada en Argentina, en la provincia de Buenos Aires. El registro se corresponde a los datos de los tickets de venta generados durante todo el año, los días que el comercio estuvo abierto. Teniendo en cuenta que el comercio trabaja de Lunes a Sábados de 8hs a 20 hs, es decir, 12 hs por día, se han generado un total de datos tal que nuestro dataset contiene:
 </p>
 
-- 117.415 filas
-- 20 columnas, con variables categoricas y numericas como:   ['Fecha', 'Tipo Mov.', 'Fac. Tipo', 'Fac. Suc.', 'Fac. Nun.','Fisc. Numero', 'Tipo Pago', 'Cant.', 'Precio', 'Producto', 'Sub. Total', 'Rubro', 'Cobertura', 'Ajustes', 'Desc. Adic.', 'Total. Cliente', 'IVA', 'Tasa Iva', 'Total Gravado', 'Total sin Gravar'] 
+🟤 117.415 filas
+🟤 20 columnas, con variables categoricas y numericas como:   ['Fecha', 'Tipo Mov.', 'Fac. Tipo', 'Fac. Suc.', 'Fac. Nun.','Fisc. Numero', 'Tipo Pago', 'Cant.', 'Precio', 'Producto', 'Sub. Total', 'Rubro', 'Cobertura', 'Ajustes', 'Desc. Adic.', 'Total. Cliente', 'IVA', 'Tasa Iva', 'Total Gravado', 'Total sin Gravar'] 
 
-- Más de 7.500 productos distintos
-- Rubro farmacia (medicamentos, insumos médicos, suplementos, vitaminas, salud preventiva) y perfumería y cuidado personal (cremas, protectores, higiene). 
+🟤 Más de 7.500 productos distintos
+🟤 Rubro farmacia (medicamentos, insumos médicos, suplementos, vitaminas, salud preventiva) y perfumería y cuidado personal (cremas, protectores, higiene). 
 
-- Se trata de un conjunto de datos reales, lo que implica la presencia de ruido, valores inconsistentes, formatos heterogéneos y registros incompletos, características habituales en fuentes operativas del sector farmacéutico. Esta naturaleza del dataset representó un desafío significativo durante la etapa de data cleaning, ya que fue necesario aplicar múltiples técnicas de depuración, normalización y validación para garantizar la calidad de los datos antes de avanzar con el análisis y el modelado.
+🟤 Se trata de un conjunto de datos reales, lo que implica la presencia de ruido, valores inconsistentes, formatos heterogéneos y registros incompletos, características habituales en fuentes operativas del sector farmacéutico. Esta naturaleza del dataset representó un desafío significativo durante la etapa de data cleaning, ya que fue necesario aplicar múltiples técnicas de depuración, normalización y validación para garantizar la calidad de los datos antes de avanzar con el análisis y el modelado.
 
 
 ### Metodología
-- *1) Importación de librerías: se importan todas las librerías necesarias para preparar el entorno para análisis, limpieza y visualización.*
-- *2) Carga del dataset*
-- *3) Análisis inicial de calidad*
-- *4) Limpieza de datos*
-- *5) Renombrado y orden de columnas*
-- *6) Transformaciones*
-- *7) Análisis Exploratorio (EDA)*
-- *8) Visualizaciones*
-- *9) Guardado de resultados*
-- *10) Conclusiones del análisis*
-- *11) Normalización y encoding de datos*
-- *12) Separación train/test*
-- *13) Creación y prueba de distintos modelos*
-- *14) Entrenamiento de modelo*
-- *15) Hiperparametrización del modelo*
-- *16) Calculo de precisión y errores*
-- *17) Optimización de EDA*
-- *18) Re-entrenamiento de modelo y nuevo cálculo de errores*
-- *19) Creación y uso de url con Streamlit*
-- *20) Prueba real como usuario externo*
+🔸 *Importación de librerías y cargado de dataset*
+🔸 *Análisis inicial de estructura de dataframe, tipo de variables y calidad*
+🔸 *Limpieza de datos nulos, duplicados, vacíos y outliers*
+🔸 *Renombrado y orden de columnas*
+🔸 *Transformaciones de columnas: nuevas columnas y asignaciones grupales*
+🔸 *Análisis Exploratorio (EDA)*
+🔸 *Visualizaciones*
+🔸 *Guardado de resultados y observaciones del análisis*
+🔸 *Normalización, encoding de datos y separación train/test*
+🔸 *Creación y prueba de distintos modelos*
+🔸 *Entrenamiento de modelo*
+🔸 *Hiperparametrización del modelo*
+🔸 *Calculo de precisión y errores*
+🔸 *Optimización de EDA*
+🔸 *Nuevos entrenamientos de modelo y optimización del modelo elegido*
+🔸 *Creación y uso de url con Streamlit*
+🔸 *Prueba real como usuario externo*
 
 ## 📝 Frases de proyecto
 
-### Paso 1: Definición de nuestro problema
+### 🔽 Paso 1: Definición de nuestro problema
 
  Actualmente, la farmacia gestiona su stock principalmente a partir de la experiencia del personal, la intuición comercial y el análisis manual de ventas pasadas. Si bien este enfoque puede funcionar en escenarios estables, resulta insuficiente en un contexto dinámico y volátil como el argentino, donde los hábitos de consumo, los precios y la disponibilidad de productos cambian de forma constante.
 
@@ -109,19 +106,19 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
  - En definitiva, la farmacia no dispone hoy de una herramienta objetiva, basada en datos, que le permita anticiparse a las necesidades reales de sus pacientes y clientes.*
 
 
-### Paso 2: Acquiring and Loading the Data Set
+### 🔽 Paso 2: Adquisición y carga de datos
 
 - Los datos fueron obtenidos desde un archivo CSV que son registros reales de ventas de una farmacia durante el año 2025.
 
 El dataset fue generado y descargado desde un software local que se utiliza en las farmacias en Argentina, el mismo arroja un archivo extension Excel, que fue desencriptado para poder pasarlo a .csv para luego cargarlo en Python utilizando Pandas. Se realizó una inspección inicial para comprender su estructura, tipos de datos y calidad.
 
-### Step 3: Almacenamiento de datos
+### 🔽 Paso 3: Almacenamiento de datos
 
 - Los datos fueron almacenados en una base de datos SQLite para facilitar su acceso, seguridad y reutilización.
 
 - Desde Python se ejecutaron consultas SQL (SELECT, GROUP BY, WHERE) para generar vistas preliminares que sirvieron como base para el análisis exploratorio.
 
-### Step 4: Perform a Descriptive Analysis
+### 🔽 Paso 4: Perform a Descriptive Analysis
 
 Se analizaron las estadísticas descriptivas de las principales variables:
 
@@ -131,7 +128,7 @@ Se analizaron las estadísticas descriptivas de las principales variables:
 
 Se evaluaron posibles distribuciones teóricas y se detectaron sesgos y outliers.
 
-### Step 5: Full EDA
+### 🔽 Paso 5: Full EDA
 
 Se realizó un EDA completo que incluyó:
 
@@ -141,11 +138,9 @@ Se realizó un EDA completo que incluyó:
 - Creación de variables temporales (año, mes, días)
 - Visualización de patrones de consumo
 
-### Step 6: Creación de modelo y optimización de parámetros
+### 🔽 Paso 6: Creación de modelo y optimización de parámetros
 
-
-
-### Step 7: Despliegue de modelo
+### 🔽 Paso 7: Despliegue de modelo
 
 
 
