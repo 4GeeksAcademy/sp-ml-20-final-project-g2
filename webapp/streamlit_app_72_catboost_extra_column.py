@@ -361,8 +361,6 @@ Tu archivo puede contener, entre otras, las siguientes columnas (se aceptan sin 
 - Total Gravado  
 - Total sin Gravar  
 
-Estas columnas **se ignoran automáticamente** si no son necesarias para la predicción.
-
 ---
 
 ### 🧠 Recomendaciones
