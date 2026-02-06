@@ -71,40 +71,50 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
 
 
 ### Metodología
-*1) Importación de librerías: se importan todas las librerías necesarias para preparar el entorno para análisis, limpieza y visualización.*
-*2) Carga del dataset*
-*3) Análisis inicial de calidad*
-*4) Limpieza de datos*
-*5) Renombrado y orden de columnas*
-*6) Transformaciones*
-*7) Análisis Exploratorio (EDA)*
-*8) Visualizaciones*
-*9) Guardado de resultados*
-*10) Conclusiones del análisis*
-*11) Normalización y encoding de datos*
-*12) Separación train/test*
-*13) Creación y prueba de distintos modelos*
-*14) Entrenamiento de modelo*
-*15) Hiperparametrización del modelo*
-*16) Calculo de precisión y errores*
-*17) Optimización de EDA*
-*18) Re-entrenamiento de modelo y nuevo cálculo de errores*
-*19) Creación y uso de url con Streamlit*
-*20) Prueba real como usuario externo*
+- *1) Importación de librerías: se importan todas las librerías necesarias para preparar el entorno para análisis, limpieza y visualización.*
+- *2) Carga del dataset*
+- *3) Análisis inicial de calidad*
+- *4) Limpieza de datos*
+- *5) Renombrado y orden de columnas*
+- *6) Transformaciones*
+- *7) Análisis Exploratorio (EDA)*
+- *8) Visualizaciones*
+- *9) Guardado de resultados*
+- *10) Conclusiones del análisis*
+- *11) Normalización y encoding de datos*
+- *12) Separación train/test*
+- *13) Creación y prueba de distintos modelos*
+- *14) Entrenamiento de modelo*
+- *15) Hiperparametrización del modelo*
+- *16) Calculo de precisión y errores*
+- *17) Optimización de EDA*
+- *18) Re-entrenamiento de modelo y nuevo cálculo de errores*
+- *19) Creación y uso de url con Streamlit*
+- *20) Prueba real como usuario externo*
 
-### Results
-*To be updated with our findings and model performance*
+## 📝 Frases de proyecto
 
-## 📝 Project Phases
-
-### Step 1: Problem Definition
+### Step 1: Definición de nuestro problema
 
  Actualmente, la farmacia gestiona su stock principalmente a partir de la experiencia del personal, la intuición comercial y el análisis manual de ventas pasadas. Si bien este enfoque puede funcionar en escenarios estables, resulta insuficiente en un contexto dinámico y volátil como el argentino, donde los hábitos de consumo, los precios y la disponibilidad de productos cambian de forma constante.
 
- La ausencia de una metodología analítica y sistematizada para prever la demanda futura genera decisiones reactivas en lugar de estratégicas. Esto se traduce en quiebres de stock en productos críticos para la atención sanitaria, sobrestock de artículos de baja rotación y una utilización ineficiente del capital de trabajo. En definitiva, la farmacia no dispone hoy de una herramienta objetiva, basada en datos, que le permita anticiparse a las necesidades reales de sus pacientes y clientes.*
+ La ausencia de una metodología analítica y sistematizada para prever la demanda futura genera decisiones reactivas en lugar de estratégicas; esto genera:
+
+❌ Quiebres de stock en productos críticos
+
+❌ Sobrestock en productos de baja rotación
+
+❌ Uso ineficiente del capital de trabajo
+ 
+ - En definitiva, la farmacia no dispone hoy de una herramienta objetiva, basada en datos, que le permita anticiparse a las necesidades reales de sus pacientes y clientes.*
 
 
 ### Step 2: Acquiring and Loading the Data Set
+
+- Los datos fueron obtenidos desde un archivo CSV que son registros reales de ventas de una farmacia durante el año 2025.
+
+El dataset fue generado y descargado desde un software local que se utiliza en las farmacias en Argentina, el mismo arroja un archivo extension Excel, que fue desencriptado para poder pasarlo a .csv para luego cargarlo en Python utilizando Pandas. Se realizó una inspección inicial para comprender su estructura, tipos de datos y calidad.
+
 Since in the real world data does not usually arrive in a flat csv file, this data must be acquired by one of the following ways:
 - Extracting data from some web page or portal using web scraping techniques
 - Exploitation of a public database using SQL language (the database must support this language)
@@ -114,10 +124,11 @@ Once you have the data, you must store it in a CSV document and load it into Pyt
 
 **NOTE:** Depending on the dataset and the case study to be explored, datasets downloaded by other means could be evaluated and accepted.
 
-### Step 3: Store the Information
-A widely used practice is to store the data, especially if they are massive, in a database for quick access to them. From all the databases we have studied, choose the one most compatible with your data and store it there. Then, perform queries using Python (with pure SQL code or using the wrappers we have studied in the course) to use the different statements: SELECT, JOIN, INSERT.... These queries must provide a value to start the analysis on the data prior to the statistics and EDA.
+### Step 3: Almacenamiento de datos
 
-It is important to understand that in the real world we do not only have CSV as an ally to store data, since it is easier to lose a flat file like CSV than a database with its connections and data models inside. Security is also a critical and important factor for storing your data there, since a CSV does not provide any protection mechanism that other technologies do.
+- Los datos fueron almacenados en una base de datos SQLite para facilitar su acceso, seguridad y reutilización.
+
+- Desde Python se ejecutaron consultas SQL (SELECT, GROUP BY, WHERE) para generar vistas preliminares que sirvieron como base para el análisis exploratorio.
 
 ### Step 4: Perform a Descriptive Analysis
 The raw data stored in a database can be a great and very valuable source of information. Before we begin to simplify and exploit them with EDA, we must know their fundamental statistical measures: means, modes, distributions, deviations, etcetera. Analyze the descriptive statistical variables of each of the predictors of the data set and theorize about the distribution that each of them follows.
@@ -137,10 +148,10 @@ Remember that the hyperparameter optimization step is very important to explore 
 ### Step 7: Deploy the Model
 Create a Machine Learning web application using your saved model. You can use Flask, Streamlit or any other tool you know. Use Heroku, Render or another cloud computing platform of your choice to deploy your web application and share it with the world. Remember that the application is going to be the gateway to potential users or customers, and you have to take care of even the smallest detail.
 
-## 📁 Project Structure
+## 📁 Estructura de proyecto
 
 ```
-ml-project-repo/
+sp-ml-20-final-project-g2/
 ├── 📁 data/                # Raw and processed datasets
 │    ├── 📁 interin/        # For intermediate data that has been transformed.
 │    ├── 📁 processed/      # For the final data to be used for modeling.
@@ -150,14 +161,25 @@ ml-project-repo/
 ├── 📁 models/              # Trained model artifacts
 ├── 📁 notebooks/           # Jupyter notebooks for EDA and analysis
 ├── 📁 src/                 # Source code modules
+     ├──eda_farmacia.ipynb
 ├── 📁 webapp/              # Flask/Streamlit application
 ```
 
-## 🛠️ Technologies Used
+## 🛠️ Tecnologías utilizadas
 
-*[To be updated as we select our tech stack]*
+- Excel
+- Python
+- Pandas
+- NumPy
+- Scikit-learn
+- Matplotlib
+- Seaborn
+- SQLite
+- Randomforest
+- XGBoost
+- Streamlit
 
-## 📊 Results
+## 📊 Resultados
 
 *[To be updated with our model performance and insights]*
 
