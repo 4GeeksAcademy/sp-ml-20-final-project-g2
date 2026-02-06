@@ -56,7 +56,8 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
 🎯 Objetivo: desarrollar un modelo predictivo que permita estimar el stock óptimo por producto para el año 2026, en función del comportamiento histórico de ventas, estacionalidad, tipo de producto y patrones de consumo.
 </p>
 
-### Dataset
+
+## ➖ DATASET
 <p align="justify">
 - El dataset contiene información de registro de ventas durante el año 2025 de una farmacia situada en Argentina, en la provincia de Buenos Aires. El registro se corresponde a los datos de los tickets de venta generados durante todo el año, los días que el comercio estuvo abierto. Teniendo en cuenta que el comercio trabaja de Lunes a Sábados de 8hs a 20 hs, es decir, 12 hs por día, se han generado un total de datos tal que nuestro dataset contiene:
 </p>
@@ -70,6 +71,7 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
 🟤 Rubro farmacia (medicamentos, insumos médicos, suplementos, vitaminas, salud preventiva) y perfumería y cuidado personal (cremas, protectores, higiene). 
 
 🟤 Se trata de un conjunto de datos reales, lo que implica la presencia de ruido, valores inconsistentes, formatos heterogéneos y registros incompletos, características habituales en fuentes operativas del sector farmacéutico. Esta naturaleza del dataset representó un desafío significativo durante la etapa de data cleaning, ya que fue necesario aplicar múltiples técnicas de depuración, normalización y validación para garantizar la calidad de los datos antes de avanzar con el análisis y el modelado.
+
 
 
 ### ➖ METODOLOGÍA 
@@ -109,7 +111,7 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
 🔸 *Prueba real como usuario externo*
 
 
-## 📝 Frases de proyecto
+## 📝 FASES DE PROYECTO
 
 ### 🔽 Paso 1: Definición de nuestro problema
 
