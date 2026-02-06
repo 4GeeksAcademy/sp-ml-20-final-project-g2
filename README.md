@@ -70,8 +70,27 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
 - Se trata de un conjunto de datos reales, lo que implica la presencia de ruido, valores inconsistentes, formatos heterogéneos y registros incompletos, características habituales en fuentes operativas del sector farmacéutico. Esta naturaleza del dataset representó un desafío significativo durante la etapa de data cleaning, ya que fue necesario aplicar múltiples técnicas de depuración, normalización y validación para garantizar la calidad de los datos antes de avanzar con el análisis y el modelado.
 
 
-### Methodology
-*To be defined - we will document our chosen approach and algorithms*
+### Metodología
+*1) Importación de librerías: se importan todas las librerías necesarias para preparar el entorno para análisis, limpieza y visualización.*
+*2) Carga del dataset*
+*3) Análisis inicial de calidad*
+*4) Limpieza de datos*
+*5) Renombrado y orden de columnas*
+*6) Transformaciones*
+*7) Análisis Exploratorio (EDA)*
+*8) Visualizaciones*
+*9) Guardado de resultados*
+*10) Conclusiones del análisis*
+*11) Normalización y encoding de datos*
+*12) Separación train/test*
+*13) Creación y prueba de distintos modelos*
+*14) Entrenamiento de modelo*
+*15) Hiperparametrización del modelo*
+*16) Calculo de precisión y errores*
+*17) Optimización de EDA*
+*18) Re-entrenamiento de modelo y nuevo cálculo de errores*
+*19) Creación y uso de url con Streamlit*
+*20) Prueba real como usuario externo*
 
 ### Results
 *To be updated with our findings and model performance*
