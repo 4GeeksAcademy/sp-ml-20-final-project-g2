@@ -205,3 +205,9 @@ sp-ml-20-final-project-g2/
 ## 🌐 Live Demo
 
 *[Link to be added when the web application is deployed]*
+
+## 🧠 Valor del Proyecto
+
+✔️ Conecta datos reales con problemas reales
+✔️ Tiene pipeline profesional (CSV → DB → EDA)
+✔️ Apunta a solución de negocio
