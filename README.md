@@ -122,22 +122,32 @@ El dataset fue generado y descargado desde un software local que se utiliza en l
 - Desde Python se ejecutaron consultas SQL (SELECT, GROUP BY, WHERE) para generar vistas preliminares que sirvieron como base para el análisis exploratorio.
 
 ### Step 4: Perform a Descriptive Analysis
-The raw data stored in a database can be a great and very valuable source of information. Before we begin to simplify and exploit them with EDA, we must know their fundamental statistical measures: means, modes, distributions, deviations, etcetera. Analyze the descriptive statistical variables of each of the predictors of the data set and theorize about the distribution that each of them follows.
 
-Use hypothesis tests if you consider it necessary.
+Se analizaron las estadísticas descriptivas de las principales variables:
 
-### Step 5: Perform a Full EDA
-This step is vital to ensure that we keep the variables that are strictly necessary and eliminate those that are not relevant or do not provide information. Use the example Notebook we worked on and adapt it to this use case.
+- Frecuencias de productos
+- Distribuciones de ventas
+- Medidas de tendencia central
 
-Make sure to conveniently divide the data set into train and test as we have seen in previous lessons.
+Se evaluaron posibles distribuciones teóricas y se detectaron sesgos y outliers.
 
-### Step 6: Build the Model and Optimize It
-Once you have your data ready, decide which model fits best and train it. If in doubt, try using several of the ones you have already studied. Select the one that best fits the data.
+### Step 5: Full EDA
 
-Remember that the hyperparameter optimization step is very important to explore and achieve the best version of the model.
+Se realizó un EDA completo que incluyó:
 
-### Step 7: Deploy the Model
-Create a Machine Learning web application using your saved model. You can use Flask, Streamlit or any other tool you know. Use Heroku, Render or another cloud computing platform of your choice to deploy your web application and share it with the world. Remember that the application is going to be the gateway to potential users or customers, and you have to take care of even the smallest detail.
+- Limpieza y normalización de texto
+- Eliminación de duplicados
+- Conversión de fechas
+- Creación de variables temporales (año, mes, días)
+- Visualización de patrones de consumo
+
+### Step 6: Creación de modelo y optimización de parámetros
+
+
+
+### Step 7: Despliegue de modelo
+
+
 
 ## 📁 Estructura de proyecto
 
