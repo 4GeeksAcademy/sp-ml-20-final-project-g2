@@ -94,7 +94,7 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
 
 ## 📝 Frases de proyecto
 
-### Step 1: Definición de nuestro problema
+### Paso 1: Definición de nuestro problema
 
  Actualmente, la farmacia gestiona su stock principalmente a partir de la experiencia del personal, la intuición comercial y el análisis manual de ventas pasadas. Si bien este enfoque puede funcionar en escenarios estables, resulta insuficiente en un contexto dinámico y volátil como el argentino, donde los hábitos de consumo, los precios y la disponibilidad de productos cambian de forma constante.
 
@@ -109,20 +109,11 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
  - En definitiva, la farmacia no dispone hoy de una herramienta objetiva, basada en datos, que le permita anticiparse a las necesidades reales de sus pacientes y clientes.*
 
 
-### Step 2: Acquiring and Loading the Data Set
+### Paso 2: Acquiring and Loading the Data Set
 
 - Los datos fueron obtenidos desde un archivo CSV que son registros reales de ventas de una farmacia durante el año 2025.
 
 El dataset fue generado y descargado desde un software local que se utiliza en las farmacias en Argentina, el mismo arroja un archivo extension Excel, que fue desencriptado para poder pasarlo a .csv para luego cargarlo en Python utilizando Pandas. Se realizó una inspección inicial para comprender su estructura, tipos de datos y calidad.
-
-Since in the real world data does not usually arrive in a flat csv file, this data must be acquired by one of the following ways:
-- Extracting data from some web page or portal using web scraping techniques
-- Exploitation of a public database using SQL language (the database must support this language)
-- Exploitation of a public API to obtain data
-
-Once you have the data, you must store it in a CSV document and load it into Python using Pandas.
-
-**NOTE:** Depending on the dataset and the case study to be explored, datasets downloaded by other means could be evaluated and accepted.
 
 ### Step 3: Almacenamiento de datos
 
