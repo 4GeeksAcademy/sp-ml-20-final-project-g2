@@ -141,25 +141,24 @@ El dataset fue generado y descargado desde un software local que se utiliza en l
 
 - Desde Python se ejecutaron consultas SQL (SELECT, GROUP BY, WHERE) para generar vistas preliminares que sirvieron como base para el análisis exploratorio.
 
-### 🔽 Paso 4: Perform a Descriptive Analysis
+### 🔽 Paso 4: Realización de análisis descriptivo
 
-Se analizaron las estadísticas descriptivas de las principales variables:
+En esta etapa se trabajó con estadísticas básicas y descriptivas para entender las principales variables del dataset:
 
-- Frecuencias de productos
-- Distribuciones de ventas
-- Medidas de tendencia central
+✔️ Frecuencia de productos.
+✔️ Distribuciones de ventas.
+✔️ Medidas de tendencia central (media, mediana, moda).
+✔️ Dispersión (desvío estándar) y comportamientos atípicos.
 
-Se evaluaron posibles distribuciones teóricas y se detectaron sesgos y outliers.
 
 ### 🔽 Paso 5: Full EDA
 
-Se realizó un EDA completo que incluyó:
+Análisis Exploratorio de Datos (EDA)
 
-- Limpieza y normalización de texto
-- Eliminación de duplicados
-- Conversión de fechas
-- Creación de variables temporales (año, mes, días)
-- Visualización de patrones de consumo
+- Limpieza: eliminación de duplicados y nulos, normalización de texto (sin acentos, minúsculas, sin símbolos).
+- Transformación: conversión de fechas, creación de variables (año, mes, día).
+- Exploración: investigación, consultas al personal de farmacia, productos más vendidos, patrones por mes, comparaciones por categorías.
+- Visualizaiones: gráficos de barras, histogramas y análisis temporal.
 
 ### 🔽 Paso 6: Creación de modelo y optimización de parámetros
 
