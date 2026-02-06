@@ -62,9 +62,11 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
 </p>
 
 🟤 117.415 filas
+
 🟤 20 columnas, con variables categoricas y numericas como:   ['Fecha', 'Tipo Mov.', 'Fac. Tipo', 'Fac. Suc.', 'Fac. Nun.','Fisc. Numero', 'Tipo Pago', 'Cant.', 'Precio', 'Producto', 'Sub. Total', 'Rubro', 'Cobertura', 'Ajustes', 'Desc. Adic.', 'Total. Cliente', 'IVA', 'Tasa Iva', 'Total Gravado', 'Total sin Gravar'] 
 
 🟤 Más de 7.500 productos distintos
+
 🟤 Rubro farmacia (medicamentos, insumos médicos, suplementos, vitaminas, salud preventiva) y perfumería y cuidado personal (cremas, protectores, higiene). 
 
 🟤 Se trata de un conjunto de datos reales, lo que implica la presencia de ruido, valores inconsistentes, formatos heterogéneos y registros incompletos, características habituales en fuentes operativas del sector farmacéutico. Esta naturaleza del dataset representó un desafío significativo durante la etapa de data cleaning, ya que fue necesario aplicar múltiples técnicas de depuración, normalización y validación para garantizar la calidad de los datos antes de avanzar con el análisis y el modelado.
@@ -72,8 +74,11 @@ El objetivo de este proyecto es desarrollar una solución completa de Machine Le
 
 ### Metodología
 🔸 *Importación de librerías y cargado de dataset*
+
 🔸 *Análisis inicial de estructura de dataframe, tipo de variables y calidad*
+
 🔸 *Limpieza de datos nulos, duplicados, vacíos y outliers*
+
 🔸 *Renombrado y orden de columnas*
 🔸 *Transformaciones de columnas: nuevas columnas y asignaciones grupales*
 🔸 *Análisis Exploratorio (EDA)*
