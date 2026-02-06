@@ -1,9 +1,9 @@
 # Proyecto final Machine Learning
-
+<p align="justify">
 Este es el proyecto final de nuestro bootcamp de Machine Learning, donde demostramos las habilidades y conocimientos adquiridos a lo largo de nuestros estudios. A lo largo de este bootcamp, hemos estudiado diferentes modelos basados en proyectos de diferentes áreas y tipos. Ahora es el momento de crear nuestro propio proyecto utilizando el algoritmo que creemos que se adapta mejor a nuestro problema.
 
 Tendremos que encontrar un conjunto de datos adecuado para trabajar, procesarlo, entrenar un modelo y, finalmente, ponerlo a disposición para su consumo.
-
+</p>
 > *"Hard work always beats talent when talent doesn't work hard"* - Tim Notke
 
 ## 👥  Credits
