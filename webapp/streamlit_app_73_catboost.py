@@ -14,8 +14,8 @@ st.title("📦 Forecast de Demanda por Producto / Grupo")
 # =====================================================
 # CARGA DE MODELO Y DATA BASE (fallback)
 # =====================================================
-model = pickle.load(open("models/72_Cat_Boost_Regressor.pkl", "rb"))
-df_base = pickle.load(open("data/processed/df_72_catboost_extra_column.pkl", "rb"))
+model = pickle.load(open("models/73_Cat_Boost_Regressor.pkl", "rb"))
+df_base = pickle.load(open("data/processed/df.pkl", "rb"))
 
 # Construir ruta absoluta basada en la ubicación del script
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -27,17 +27,6 @@ if not os.path.exists(json_path):
 
 with open(json_path, "r", encoding="utf-8") as f:
     category_keywords = json.load(f)
-
-# =====================================================
-# MAPPING product -> groups (desde df_base, sin tocar EDA)
-# =====================================================
-product_to_group = (
-    df_base[["product", "groups"]]
-    .dropna()
-    .drop_duplicates(subset=["product"])
-    .set_index("product")["groups"]
-    .to_dict()
-)
 
 # =====================================================
 # UTILIDADES: FEATURES QUE ESPERA EL MODELO
@@ -54,7 +43,7 @@ def get_model_features(model, df_fallback):
     if hasattr(model, "feature_names_in_"):
         return list(model.feature_names_in_)
 
-    drop_cols = {"y", "week_start", "week_end"}
+    drop_cols = {"y", "week_start", "week_end", "group", "groups", "year"}
     return [c for c in df_fallback.columns if c not in drop_cols]
 
 MODEL_FEATURES = get_model_features(model, df_base)
@@ -98,6 +87,7 @@ def clean_text(x):
     )
     return x
 
+
 def assign_category(name: str, category_keywords: dict) -> str:
     s = str(name).lower()
     for category, keywords in category_keywords.items():
@@ -128,57 +118,85 @@ def normalize_raw_columns(df_raw):
     }
     return df_raw.rename(columns=rename_map)
 
-def preprocess_raw_data(df_raw):
+def preprocess_raw_data_min(df_raw):
     df = df_raw.copy()
 
-    # ✅ Solo columnas que vienen del raw
     required_cols = {"Fecha", "Producto", "Cant"}
     if not required_cols.issubset(df.columns):
         missing = required_cols - set(df.columns)
         raise ValueError(f"Faltan columnas obligatorias: {missing}")
 
-    # Tipos
     df["Fecha"] = pd.to_datetime(df["Fecha"], errors="coerce", dayfirst=True)
     df["Cant"] = pd.to_numeric(df["Cant"], errors="coerce")
-
-    # ✅ NUNCA pedir Group aquí
     df = df.dropna(subset=["Fecha", "Producto", "Cant"])
 
-    # Producto limpio (para el modelo)
     df["product"] = df["Producto"].apply(clean_text)
 
-    # ✅ group derivado desde Producto usando el JSON category_keywords
-    df["group"] = df["Producto"].apply(lambda x: assign_category(x, category_keywords))
-    df["groups"] = df["group"]  # por compatibilidad si algo usa 'groups'
-
-    # Semana ISO
     iso = df["Fecha"].dt.isocalendar()
-    df["year"] = iso.year.astype(int)
     df["num_semana"] = iso.week.astype(int)
 
-    # week_start / week_end
-    df["week_start"] = (df["Fecha"] - pd.to_timedelta(df["Fecha"].dt.weekday, unit="D")).dt.normalize()
-    df["week_end"] = df["week_start"] + pd.Timedelta(days=6)
-
-    # Agregado semanal
-    df_weekly = (
-        df.groupby(["product", "group", "year", "num_semana"], as_index=False)
-          .agg(
-              y=("Cant", "sum"),
-              week_start=("week_start", "min"),
-              week_end=("week_end", "max"),
-          )
-          .sort_values(["group", "product", "year", "num_semana"])
+    weekly = (
+        df.groupby(["product", "num_semana"], as_index=False)
+          .agg(y=("Cant", "sum"))
+          .sort_values(["product", "num_semana"])
           .reset_index(drop=True)
     )
+    return weekly
 
-    return df_weekly
+def merge_upload_into_base(df_base, df_weekly_new):
+    """
+    df_base: histórico (product, num_semana, y, y_lag1..y_lag8)
+    df_weekly_new: semanal desde raw (product, num_semana, y) [+ year opcional]
+    Devuelve weekly combinado (product, num_semana, y) agregando por suma.
+    """
 
-def create_lags(df_weekly, n_lags=8):
-    df = df_weekly.sort_values(["group", "product", "year", "num_semana"]).copy()
+    # Base mínimo (solo lo necesario)
+    base_weekly = df_base[["product", "num_semana", "y"]].copy()
+
+    new_weekly = df_weekly_new[["product", "num_semana", "y"]].copy()
+
+    # ⚠️ Si el upload trae varias "year" y tú no usas year en df_base,
+    # colapsamos por (product, num_semana) sumando (evita choque entre años)
+    # (esto es lo único posible sin year en el modelo)
+    new_weekly = (
+        new_weekly.groupby(["product", "num_semana"], as_index=False)["y"].sum()
+    )
+
+    combined = pd.concat([base_weekly, new_weekly], ignore_index=True)
+
+    # ✅ Dedup final: si coincide product+num_semana, SUMA (lo que pediste: “añadir sumando”)
+    combined = (
+        combined.groupby(["product", "num_semana"], as_index=False)["y"].sum()
+                .sort_values(["product", "num_semana"])
+                .reset_index(drop=True)
+    )
+    return combined
+
+
+def create_lags_fill(df_weekly, n_lags=8):
+    """
+    Crea lags sin eliminar filas.
+    Rellena los NaNs de los lags con la media histórica (expanding) por producto.
+    """
+    df = df_weekly.sort_values(["product", "num_semana"]).copy()
+
+    # lags
     for lag in range(1, n_lags + 1):
-        df[f"y_lag{lag}"] = df.groupby(["product", "group"])["y"].shift(lag)
-    return df.dropna().reset_index(drop=True)
+        df[f"y_lag{lag}"] = df.groupby("product")["y"].shift(lag)
+
+    # media expanding del pasado (para rellenar lags iniciales)
+    past_mean = (
+        df.groupby("product")["y"]
+          .apply(lambda s: s.shift(1).expanding(min_periods=1).mean())
+          .reset_index(level=0, drop=True)
+    )
+
+    lag_cols = [f"y_lag{l}" for l in range(1, n_lags + 1)]
+    for c in lag_cols:
+        df[c] = df[c].fillna(past_mean)
+
+    df[lag_cols] = df[lag_cols].fillna(0)
+    return df.reset_index(drop=True)
 
 # =====================================================
 # NORMALIZACIÓN FINAL DEL DF_MODEL (CLAVE PARA EL ERROR 'year')
@@ -388,8 +406,11 @@ if uploaded_file is not None:
             st.write("Columnas detectadas:", df_raw.columns.tolist())
             st.dataframe(df_raw.head())
 
-        df_weekly = preprocess_raw_data(df_raw)
-        df_model = create_lags(df_weekly)
+        weekly_new = preprocess_raw_data_min(df_raw)
+
+        weekly_combined = merge_upload_into_base(df_base, weekly_new)
+
+        df_model = create_lags_fill(weekly_combined, n_lags=8)
 
         st.sidebar.success("Datos crudos procesados correctamente ✅")
     except Exception as e:
@@ -401,12 +422,22 @@ else:
 # ✅ normalizar siempre (arregla el 'year' y nombres de group)
 df_model = normalize_df_model(df_model)
 
-# Validación mínima
-required_cols = {"product", "group"}
-missing = required_cols - set(df_model.columns)
-if missing:
-    st.error(f"El dataset no contiene columnas necesarias: {missing}")
-    st.stop()
+# Si no existe "group" (porque df_base no tiene), crearla usando el JSON
+if "group" not in df_model.columns:
+    df_model["group"] = df_model["product"].apply(lambda x: assign_category(x, category_keywords))
+
+if "week_start" not in df_model.columns:
+    current_year = pd.Timestamp.today().year
+    df_model["year"] = current_year
+    df_model["week_start"] = pd.to_datetime(
+        df_model["year"].astype(str) + "-W" + df_model["num_semana"].astype(str).str.zfill(2) + "-1",
+        format="%G-W%V-%u",
+        errors="coerce"
+    )
+    df_model["week_end"] = df_model["week_start"] + pd.Timedelta(days=6)
+
+    # Solo para UI (no entra al modelo)
+df_model["group"] = df_model["product"].apply(lambda x: assign_category(x, category_keywords))
 
 # =====================================================
 # UI PRINCIPAL
@@ -460,6 +491,16 @@ else:
 # =====================================================
 # PREDICCIÓN + RESULTADOS
 # =====================================================
+if "week_start" not in df_model.columns:
+    current_year = pd.Timestamp.today().year
+    df_model["year"] = current_year
+    df_model["week_start"] = pd.to_datetime(
+        df_model["year"].astype(str) + "-W" + df_model["num_semana"].astype(str).str.zfill(2) + "-1",
+        format="%G-W%V-%u",
+        errors="coerce"
+    )
+    df_model["week_end"] = df_model["week_start"] + pd.Timedelta(days=6)
+
 if st.button("🔮 Predecir demanda"):
     try:
         if mode == "Un producto":
