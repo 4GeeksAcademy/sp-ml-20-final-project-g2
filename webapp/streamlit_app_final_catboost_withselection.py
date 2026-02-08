@@ -663,7 +663,7 @@ if mode == "Un producto":
     # If user filtered by group, lock group to that filter
     if selected_group_filter is not None:
         group = selected_group_filter
-        st.caption(f"Group seleccionado: **{group}**")
+        st.caption(f"Grupo seleccionado: **{group}**")
     else:
         # Otherwise allow choosing among product's groups
         groups_for_product = sorted(
