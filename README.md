@@ -170,15 +170,13 @@ Análisis Exploratorio de Datos (EDA)
 
 
 ### 🔽 Paso 7: Visualización e interacción con el modelo - Streamlit
-- Flujo de la aplicación de Streamlit
-
+- Flujo de la aplicación de Streamlit  
 
 🔸 Carga de datos en tiempo real
    - El usuario sube archivos CSV con ventas recientes. La app ejecuta automáticamente procesos de:
    - Limpieza de datos
    - Normalización de texto
-   - Asignación de categorías mediante un diccionario inteligente (JSON) desarrollado durante el EDA
-
+   - Asignación de categorías mediante un diccionario inteligente (JSON) desarrollado durante el EDA  
 
 🔸 Actualización inteligente del histórico
 - La aplicación detecta si los datos cargados son nuevos o duplicados. En función de eso:
