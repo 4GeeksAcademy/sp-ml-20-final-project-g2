@@ -45,6 +45,7 @@ st.markdown(
     div[role="radiogroup"] input:checked + div svg {
         fill: #2E7D32 !important;
     }
+
     </style>
     """,
     unsafe_allow_html=True,
