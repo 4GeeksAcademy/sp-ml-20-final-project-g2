@@ -11,7 +11,8 @@ import os
 # Streamlit configuration
 # =====================================================
 st.set_page_config(page_title="📦 Demand Forecast", layout="wide")
-st.title("📦 Forecast de Demanda por Producto / Grupo")
+st.title("📦 FarmaCast")
+st.subheader("Predicción de demanda por producto y grupo")
 
 st.markdown(
     """
