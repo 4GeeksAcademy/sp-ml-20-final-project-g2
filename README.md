@@ -4,7 +4,7 @@ Este es el proyecto final de nuestro bootcamp de Machine Learning, donde demostr
 
 Tendremos que encontrar un conjunto de datos adecuado para trabajar, procesarlo, entrenar un modelo y, finalmente, ponerlo a disposición para su consumo.
 </p>
-> *"Hard work always beats talent when talent doesn't work hard"* - Tim Notke
+ *"Hard work always beats talent when talent doesn't work hard"* - Tim Notke
 
 ## 👥  Credits
 
@@ -174,10 +174,10 @@ Análisis Exploratorio de Datos (EDA)
 
 
 🔸 Carga de datos en tiempo real
-- El usuario sube archivos CSV con ventas recientes. La app ejecuta automáticamente procesos de:
-- Limpieza de datos
-- Normalización de texto
-- Asignación de categorías mediante un diccionario inteligente (JSON) desarrollado durante el EDA
+   - El usuario sube archivos CSV con ventas recientes. La app ejecuta automáticamente procesos de:
+   - Limpieza de datos
+   - Normalización de texto
+   - Asignación de categorías mediante un diccionario inteligente (JSON) desarrollado durante el EDA
 
 
 🔸 Actualización inteligente del histórico
