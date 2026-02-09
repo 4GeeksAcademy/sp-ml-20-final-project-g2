@@ -1,4 +1,6 @@
 import streamlit as st
+import numpy as np
+import plotly.express as px
 import pandas as pd
 import pickle
 import re
@@ -10,6 +12,28 @@ import os
 # =====================================================
 st.set_page_config(page_title="📦 Demand Forecast", layout="wide")
 st.title("📦 Forecast de Demanda por Producto / Grupo")
+
+st.markdown(
+    """
+    <style>
+    /* Chips del multiselect */
+    div[data-baseweb="tag"] {
+        background-color: #00796B !important;   /* verde farmacia */
+        color: white !important;
+    }
+
+    div[data-baseweb="tag"] span {
+        color: white !important;
+    }
+
+    /* Botón X del chip */
+    div[data-baseweb="tag"] svg {
+        fill: white !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 # =====================================================
 # Load model and base data
@@ -804,6 +828,44 @@ if st.button("🔮 Predecir demanda"):
             else:
                 st.bar_chart(bars_df)
 
+            st.subheader("📈 Histórico vs Forecast")
+
+            hist = df_model[(df_model["product"] == product) & (df_model["group"] == group)].copy()
+
+            # Nos quedamos con algo presentable
+            hist = hist[["week_start", "y"]].copy()
+            hist["week_start"] = pd.to_datetime(hist["week_start"], errors="coerce")
+            hist = hist.dropna().sort_values("week_start")
+
+            fc = forecast[["week_start", "y"]].copy()
+            fc["week_start"] = pd.to_datetime(fc["week_start"], errors="coerce")
+            fc = fc.dropna().sort_values("week_start")
+
+            hist["tipo"] = "Histórico"
+            fc["tipo"] = "Forecast"
+
+            plot_df = pd.concat([hist, fc], ignore_index=True)
+
+            # Opción A: Plotly (recomendado)
+            fig = px.line(
+                plot_df,
+                x="week_start",
+                y="y",
+                color="tipo",
+                markers=True,
+                title=f"{product} • {group}",
+                labels={"week_start": "Semana", "y": "Cantidad", "tipo": ""},
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+            # Mini-métrica: variación vs última semana histórica
+            if len(hist) > 0 and len(fc) > 0:
+                last_hist = float(hist["y"].iloc[-1])
+                first_fc = float(fc["y"].iloc[0])
+                delta = first_fc - last_hist
+                st.metric("Forecast 1ª semana vs última histórica", value=int(first_fc), delta=int(delta))
+
+
             # CSV (separate from what is displayed)
             csv_bytes = table_show_single.copy().to_csv(index=False).encode("utf-8")
 
@@ -888,6 +950,27 @@ if st.button("🔮 Predecir demanda"):
 
             st.subheader("🔥 Ranking (Producto + Group) por demanda total")
             st.dataframe(resumen.head(25).reset_index(drop=True), hide_index=True)
+
+            # Graph showing demand participation by group
+            by_group = (
+                forecast_all.groupby("group", as_index=False)["y"]
+                .sum()
+                .sort_values("y", ascending=False)
+            )
+
+            if by_group.shape[0] > 1:
+                st.subheader("🍰 Participación de demanda por grupo")
+                fig = px.pie(
+                    by_group,
+                    names="group",
+                    values="y",
+                    title=f"Demanda total por grupo ({weeks} semanas)",
+                )
+                st.plotly_chart(fig, use_container_width=True)
+
+                # A bar graph
+                st.caption("📊 Demanda por grupo")
+                st.bar_chart(by_group.set_index("group")[["y"]])
 
             # Separate CSV
             csv_all_bytes = table_all.copy().to_csv(index=False).encode("utf-8")
