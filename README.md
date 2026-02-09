@@ -166,8 +166,12 @@ Análisis Exploratorio de Datos (EDA)
 
 ### 🔽 Paso 6: Creación de modelo y optimización de parámetros
 
+
+
+
 ### 🔽 Paso 7: Visualización e interacción con el modelo - Streamlit
 - Flujo de la aplicación de Streamlit
+
 
 🔸 Carga de datos en tiempo real
 - El usuario sube archivos CSV con ventas recientes. La app ejecuta automáticamente procesos de:
@@ -175,26 +179,31 @@ Análisis Exploratorio de Datos (EDA)
 - Normalización de texto
 - Asignación de categorías mediante un diccionario inteligente (JSON) desarrollado durante el EDA
 
+
 🔸 Actualización inteligente del histórico
 - La aplicación detecta si los datos cargados son nuevos o duplicados. En función de eso:
 - Actualiza el histórico de ventas
 - Recalcula variables temporales (lags)
 - Garantiza que las predicciones usen siempre la información más reciente
 
+
 🔸Generación de predicciones (Forecasting)
 - La app permite dos modos de análisis:
     - Modo Individual: selección de un producto y predicción de demanda a 1, 2, 4 u 8 semanas
     - Modo Global: ranking de productos con mayor demanda proyectada por grupo o categoría
+
 
 🔸 Visualización interactiva de resultados
 - Los resultados se muestran de forma clara mediante:
 - Gráficos de series temporales
 - Tablas comparativas por producto, grupo o categoría
 
+
 🔸Exportación de resultados
 - El usuario puede descargar las predicciones en formato CSV para:
 - Integrarlas en sistemas de gestión internos
 - Facilitar decisiones de compra y stock
+
 
 
 ## 📁 Estructura de proyecto
