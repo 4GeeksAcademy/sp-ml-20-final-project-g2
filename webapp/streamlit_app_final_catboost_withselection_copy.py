@@ -16,19 +16,34 @@ st.title("📦 Forecast de Demanda por Producto / Grupo")
 st.markdown(
     """
     <style>
-    /* Chips del multiselect */
-    div[data-baseweb="tag"] {
-        background-color: #00796B !important;   /* verde farmacia */
-        color: white !important;
+    /* ==============================
+       MULTISELECT CHIPS (tags)
+       ============================== */
+    .stMultiSelect [data-baseweb="tag"] {
+        background-color: #2E7D32 !important;
+        color: #FFFFFF !important;
+        border: 0 !important;
     }
 
-    div[data-baseweb="tag"] span {
-        color: white !important;
+    .stMultiSelect [data-baseweb="tag"],
+    .stMultiSelect [data-baseweb="tag"] span,
+    .stMultiSelect [data-baseweb="tag"] * {
+        color: #FFFFFF !important;
     }
 
-    /* Botón X del chip */
-    div[data-baseweb="tag"] svg {
-        fill: white !important;
+    .stMultiSelect [data-baseweb="tag"] svg {
+        fill: #FFFFFF !important;
+    }
+
+    /* ==============================
+       RADIO BUTTONS (activo)
+       ============================== */
+    div[role="radiogroup"] svg {
+        fill: #2E7D32 !important;
+    }
+
+    div[role="radiogroup"] input:checked + div svg {
+        fill: #2E7D32 !important;
     }
     </style>
     """,
