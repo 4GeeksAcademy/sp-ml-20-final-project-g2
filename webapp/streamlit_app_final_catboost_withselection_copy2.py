@@ -572,9 +572,15 @@ def forecast_all_products(df_model, model, n_weeks, group_filter=None):
 # =====================================================
 st.sidebar.header("📂 Datos de entrada")
 
-with st.sidebar.expander("ℹ️ Instrucciones para subir el CSV", expanded=False):
+with st.sidebar.expander("📘 Guía para subir un archivo CSV (opcional)", expanded=False):
     st.markdown(
         """
+
+**Solo es necesario si quieren cargar sus propios datos.**  
+Si no suben nada, FarmaCast usa el histórico por defecto.
+
+---
+
 ### 📄 Formato del archivo
 - Tipo: **.csv**
 - Fechas: formato recomendado **dd/mm/aaaa** (ej: 12/02/2026)
