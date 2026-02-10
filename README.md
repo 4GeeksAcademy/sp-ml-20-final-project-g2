@@ -242,15 +242,19 @@ sp-ml-20-final-project-g2/
 ├── 📁 data/                # Raw and processed datasets
 │    ├── 📁 interin/        # For intermediate data that has been transformed.
 │    ├── 📁 processed/      # For the final data to be used for modeling.
+          ├──df.pkl
 │    ├── 📁 raw/            # For raw data without any processing.
 ├── 📁 database/            # SQL scripts and database configs
-├── 📁 docs/                # Documentation and presentation materials
 ├── 📁 models/              # Trained model artifacts
-     ├──model-pharmacy
-├── 📁 notebooks/           # Jupyter notebooks for EDA and analysis
+     ├──72_Cat_Boost_Regressor.pkl
 ├── 📁 src/                 # Source code modules
+     ├──category_keywords.json
      ├──EDA.ipynb
-├── 📁 webapp/              # Flask/Streamlit application
+     ├──farmacia-datos.db
+├── 📁 webapp/              # Streamlit application
+     ├──streamlit_app.py
+├── README.md
+├── requirements.txt
 ```
 
 ## 🛠️ Tecnologías utilizadas
@@ -265,15 +269,16 @@ sp-ml-20-final-project-g2/
 - SQLite
 - Randomforest
 - XGBoost
+- CatBoost
 - Streamlit
 
 ## 📊 Resultados
 
-*[To be updated with our model performance and insights]*
+✔️ Modelo final (CatBoost ajustado)
+- R² Test: 72%
+- RMSE: 4.70
+- Mejora respecto a Random Forest en capacidad de generalización.
 
-## 🌐 Live Demo
-
-*[Link to be added when the web application is deployed]*
 
 ## 🧠 Valor del Proyecto
 
