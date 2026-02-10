@@ -285,4 +285,4 @@ sp-ml-20-final-project-g2/
 
 ✔️ Conecta datos reales con problemas reales
 ✔️ Tiene pipeline profesional (CSV → DB → EDA)
-✔️ Apunta a solución de negocio
+✔️ Apunta a solución de negocio 
