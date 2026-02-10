@@ -166,6 +166,37 @@ Análisis Exploratorio de Datos (EDA)
 
 ### 🔽 Paso 6: Creación de modelo y optimización de parámetros
 
+🔸 Selección del modelo
+- Inicialmente se eligió Random Forest por intuición y buen desempeño esperado.
+- El objetivo era establecer métricas base para luego comparar con otros modelos.
+
+🔸 Estrategia de partición (Train/Test)
+- División inicial: 80% Train / 20% Test.
+- Como los datos están organizados por semanas, una división aleatoria podía dejar productos en Test que no existieran en Train.
+- Se realizó el split por bloques de semanas, garantizando que cada semana (en Train o Test) contenga todos los productos evaluados.
+
+🔸 Primer modelo sin hiperparámetros (Random Forest)
+- RMSE: 4.95
+- R² Test: 69%
+- R² Train: 96%
+  - Se detectó overfitting, esperado en Random Forest sin ajuste fino.
+
+🔸 Optimización de hiperparámetros (Random Forest)
+- Primero se aplicó RandomizedSearchCV.
+- Luego se afinó con GridSearchCV usando los mejores valores encontrados.
+- - Modelo optimizado:
+  -  R² Train: 85%
+  -  R² Test: 70%
+  -  RMSE: 4.87
+
+🔸 Prueba de otros modelos
+- Se evaluaron modelos alternativos.
+- Se seleccionó CatBoost como candidato principal.
+
+✔️ Modelo final (CatBoost ajustado)
+- R² Test: 72%
+- RMSE: 4.70
+- Mejora respecto a Random Forest en capacidad de generalización.
 
 
 
