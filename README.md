@@ -1,17 +1,17 @@
-# Machine Learning Final Project
+# Proyecto final Machine Learning
+<p align="justify">
+Este es el proyecto final de nuestro bootcamp de Machine Learning, donde demostramos las habilidades y conocimientos adquiridos a lo largo de nuestros estudios. A lo largo de este bootcamp, hemos estudiado diferentes modelos basados en proyectos de diferentes áreas y tipos. Ahora es el momento de crear nuestro propio proyecto utilizando el algoritmo que creemos que se adapta mejor a nuestro problema.
 
-This is the final project of our Machine Learning bootcamp, where we demonstrate the skills and knowledge acquired throughout our studies. Throughout this bootcamp, we have studied different models based on projects of different areas and types. Now it's time to create our own project using the algorithm that we think is best suited to our problem.
-
-We will have to find a suitable dataset to work with, process it, train a model and finally make it available for consumption.
-
-> *"Hard work always beats talent when talent doesn't work hard"* - Tim Notke
+Tendremos que encontrar un conjunto de datos adecuado para trabajar, procesarlo, entrenar un modelo y, finalmente, ponerlo a disposición para su consumo.
+</p>
+ *"Hard work always beats talent when talent doesn't work hard"* - Tim Notke
 
 ## 👥  Credits
 
 **Team Members:**
-> - Member 1
-> - Member 2
-> - Member 3
+> - Ineta Keryte
+> - Anthonny Maldonado
+> - Guillermo Mansanta
 
 **Academy:** 
 > - [4Geeks Academy](https://4geeksacademy.com/us/index) 
@@ -19,101 +19,270 @@ We will have to find a suitable dataset to work with, process it, train a model 
 > - **Mentor:** [Ing. Héctor Chocobar Torrejón](https://github.com/hchocobar/)
 > - **Teacher Assitant:** [Beatriz Solana Ros](https://github.com/mezcolantriz)
 
-## 🎯 Project Goal
+## 🎯 Objetivo del proyecto
+<p align="justify">
+- El objetivo de este proyecto es diseñar y entrenar un modelo de Machine Learning aplicado a la gestion farmaceutica, capaz de proyectar la demanda futura de cada producto de la farmacia para el año 2026, utilizando como base el histórico de ventas del año 2025. El modelo busca incorporar variables claves como la estacionalidad, el producto, el rubro, la presentación del producto y los patrones de consumo de los clientes, para estimar con mayor precisión cuántas unidades será necesario disponer en stock en cada período.
 
-The goal of this project is to develop a complete end-to-end Machine Learning solution that includes:
-- Data acquisition and processing
-- Exploratory Data Analysis (EDA)
-- Model development and optimization
-- Web application deployment
-- Real-world problem-solving through ML techniques
+De esta manera, se apunta a transformar la gestión de inventario en un proceso proactivo y basado en datos, que permita optimizar los niveles de stock, reducir pérdidas por vencimientos, evitar quiebres de productos esenciales y mejorar la rentabilidad general del comercio.
+</p>
 
-## 🚀 Project Overview
+El objetivo de este proyecto es desarrollar una solución completa de Machine Learning de extremo a extremo que incluya:
+- Adquisición y procesamiento de datos
+- Análisis exploratorio de datos (EDA)
+- Desarrollo y optimización de modelos
+- Desarrollo de aplicaciones Web
+- Resolución de problemas del mundo real a través de técnicas de ML
 
-*[This section will be updated as we define our specific project scope and objectives]*
+## 🚀 Introducción al proyecto
+<p align="justify">
+- Este proyecto tiene como objetivo aplicar técnicas de Machine Learning para mejorar la forma en que una farmacia gestiona su stock. A partir del análisis de las ventas de un año completo (2025) de una farmacia ubicada en la provincia de Buenos Aires, se busca entender cómo se comporta la demanda de los productos y usar esa información para planificar mejor el inventario del año 2026.
 
-### Problem Statement
-*To be defined - we will identify a real-world problem that can be solved using Machine Learning techniques*
+  La idea principal es pasar de una gestión basada solo en la experiencia a una gestión basada en datos, que permita anticiparse a las necesidades de los clientes, evitar faltantes de productos importantes y reducir el exceso de mercadería en un contexto económico cambiante. Todo el enfoque está pensado desde la realidad del negocio farmacéutico y el comportamiento de consumo de las personas.*
+</p>
 
-### Dataset
-*To be defined - we will acquire a dataset that meets the following minimum requirements:*
-- 60,000+ instances (rows)
-- 20+ predictor variables (including at least 1 categorical variable)
+### Nuestro problema
+<p align="justify">
+- En el contexto macroeconómico argentino, atravesado por inflación, inestabilidad en los precios y restricciones en el acceso al financiamiento, la gestión de inventarios se convierte en un factor crítico para la sostenibilidad de cualquier farmacia. La falta de una planificación de stock basada en criterios técnicos y analíticos impacta directamente tanto en la rentabilidad del negocio como en la calidad del servicio prestado a la comunidad.
 
-### Methodology
-*To be defined - we will document our chosen approach and algorithms*
+Desde la perspectiva comercial, una mala política de inventarios genera una utilización ineficiente del capital de trabajo, con recursos financieros inmovilizados en mercadería de baja rotación o con riesgo de vencimiento. Esto incrementa los costos operativos, deteriora el flujo de caja y limita la capacidad de negociación con droguerías y laboratorios, afectando condiciones de pago, descuentos y líneas de crédito.
 
-### Results
-*To be updated with our findings and model performance*
+Desde la perspectiva del servicio farmacéutico, los errores de planificación derivan en quiebres de stock de medicamentos esenciales, demoras en la atención, pérdida de continuidad en tratamientos y disminución de la confianza de los pacientes y clientes. La farmacia deja de ser percibida como un punto de referencia sanitario confiable y pasa a ser vista como un comercio reactivo e ineficiente.
 
-## 📝 Project Phases
+En conjunto, la ausencia de una gestión profesional del inventario compromete simultáneamente la competitividad económica del negocio y su rol social como prestador de un servicio de salud.
 
-### Step 1: Problem Definition
-Start by defining a problem and turn it into a Machine Learning problem. This is the first step, since the data must meet a certain need and the Machine Learning process must aim at satisfying that need.
+👉 Problema real: la farmacia no cuenta con una metodología objetiva para anticipar la demanda futura de sus productos.
 
-The choice of the data set must satisfy minimum requirements in terms of number of rows and predictor variables. At a minimum, it must contain:
-- 60,000 instances (rows)
-- 20 predictor variables, of which there must be at least 1 categorical variable
+🎯 Objetivo: desarrollar un modelo predictivo que permita estimar el stock óptimo por producto para el año 2026, en función del comportamiento histórico de ventas, estacionalidad, tipo de producto y patrones de consumo.
+</p>
 
-**NOTE:** Depending on the dataset and the case study to be explored, datasets that do not reach the established minimum may be evaluated and accepted.
 
-### Step 2: Acquiring and Loading the Data Set
-Since in the real world data does not usually arrive in a flat csv file, this data must be acquired by one of the following ways:
-- Extracting data from some web page or portal using web scraping techniques
-- Exploitation of a public database using SQL language (the database must support this language)
-- Exploitation of a public API to obtain data
 
-Once you have the data, you must store it in a CSV document and load it into Python using Pandas.
+## ➖ DATASET
+<p align="justify">
+- El dataset contiene información de registro de ventas durante el año 2025 de una farmacia situada en Argentina, en la provincia de Buenos Aires. El registro se corresponde a los datos de los tickets de venta generados durante todo el año, los días que el comercio estuvo abierto. Teniendo en cuenta que el comercio trabaja de Lunes a Sábados de 8hs a 20 hs, es decir, 12 hs por día, se han generado un total de datos tal que nuestro dataset contiene:
+</p>
 
-**NOTE:** Depending on the dataset and the case study to be explored, datasets downloaded by other means could be evaluated and accepted.
+🟤 117.415 filas
 
-### Step 3: Store the Information
-A widely used practice is to store the data, especially if they are massive, in a database for quick access to them. From all the databases we have studied, choose the one most compatible with your data and store it there. Then, perform queries using Python (with pure SQL code or using the wrappers we have studied in the course) to use the different statements: SELECT, JOIN, INSERT.... These queries must provide a value to start the analysis on the data prior to the statistics and EDA.
+🟤 20 columnas, con variables categoricas y numericas como:   ['Fecha', 'Tipo Mov.', 'Fac. Tipo', 'Fac. Suc.', 'Fac. Nun.','Fisc. Numero', 'Tipo Pago', 'Cant.', 'Precio', 'Producto', 'Sub. Total', 'Rubro', 'Cobertura', 'Ajustes', 'Desc. Adic.', 'Total. Cliente', 'IVA', 'Tasa Iva', 'Total Gravado', 'Total sin Gravar'] 
 
-It is important to understand that in the real world we do not only have CSV as an ally to store data, since it is easier to lose a flat file like CSV than a database with its connections and data models inside. Security is also a critical and important factor for storing your data there, since a CSV does not provide any protection mechanism that other technologies do.
+🟤 Más de 7.500 productos distintos
 
-### Step 4: Perform a Descriptive Analysis
-The raw data stored in a database can be a great and very valuable source of information. Before we begin to simplify and exploit them with EDA, we must know their fundamental statistical measures: means, modes, distributions, deviations, etcetera. Analyze the descriptive statistical variables of each of the predictors of the data set and theorize about the distribution that each of them follows.
+🟤 Rubro farmacia (medicamentos, insumos médicos, suplementos, vitaminas, salud preventiva) y perfumería y cuidado personal (cremas, protectores, higiene). 
 
-Use hypothesis tests if you consider it necessary.
+- Se trata de un conjunto de datos reales, lo que implica la presencia de ruido, valores inconsistentes, formatos heterogéneos y registros incompletos, características habituales en fuentes operativas del sector farmacéutico. Esta naturaleza del dataset representó un desafío significativo durante la etapa de data cleaning, ya que fue necesario aplicar múltiples técnicas de depuración, normalización y validación para garantizar la calidad de los datos antes de avanzar con el análisis y el modelado.
 
-### Step 5: Perform a Full EDA
-This step is vital to ensure that we keep the variables that are strictly necessary and eliminate those that are not relevant or do not provide information. Use the example Notebook we worked on and adapt it to this use case.
 
-Make sure to conveniently divide the data set into train and test as we have seen in previous lessons.
 
-### Step 6: Build the Model and Optimize It
-Once you have your data ready, decide which model fits best and train it. If in doubt, try using several of the ones you have already studied. Select the one that best fits the data.
 
-Remember that the hyperparameter optimization step is very important to explore and achieve the best version of the model.
+## ➖ METODOLOGÍA 
 
-### Step 7: Deploy the Model
-Create a Machine Learning web application using your saved model. You can use Flask, Streamlit or any other tool you know. Use Heroku, Render or another cloud computing platform of your choice to deploy your web application and share it with the world. Remember that the application is going to be the gateway to potential users or customers, and you have to take care of even the smallest detail.
+🔸 *Importación de librerías y cargado de dataset*
 
-## 📁 Project Structure
+🔸 *Análisis inicial de estructura de dataframe, tipo de variables y calidad*
+
+🔸 *Limpieza de datos nulos, duplicados, vacíos y outliers*
+
+🔸 *Renombrado y orden de columnas*
+
+🔸 *Transformaciones de columnas: nuevas columnas y asignaciones grupales*
+
+🔸 *Análisis Exploratorio (EDA)*
+
+🔸 *Visualizaciones*
+
+🔸 *Guardado de resultados y observaciones del análisis*
+
+🔸 *Normalización, encoding de datos y separación train/test*
+
+🔸 *Creación y prueba de distintos modelos*
+
+🔸 *Entrenamiento de modelo*
+
+🔸 *Hiperparametrización del modelo*
+
+🔸 *Calculo de precisión y errores*
+
+🔸 *Optimización de EDA*
+
+🔸 *Nuevos entrenamientos de modelo y optimización del modelo elegido*
+
+🔸 *Creación y uso de url con Streamlit*
+
+🔸 *Prueba real como usuario externo*
+
+
+## 📝 FASES DE PROYECTO
+
+### 🔽 Paso 1: Definición de nuestro problema
+
+ Actualmente, la farmacia gestiona su stock principalmente a partir de la experiencia del personal, la intuición comercial y el análisis manual de ventas pasadas. Si bien este enfoque puede funcionar en escenarios estables, resulta insuficiente en un contexto dinámico y volátil como el argentino, donde los hábitos de consumo, los precios y la disponibilidad de productos cambian de forma constante.
+
+ La ausencia de una metodología analítica y sistematizada para prever la demanda futura genera decisiones reactivas en lugar de estratégicas; esto genera:
+
+❌ Quiebres de stock en productos críticos
+
+❌ Sobrestock en productos de baja rotación
+
+❌ Uso ineficiente del capital de trabajo
+ 
+ - En definitiva, la farmacia no dispone hoy de una herramienta objetiva, basada en datos, que le permita anticiparse a las necesidades reales de sus pacientes y clientes.*
+
+
+### 🔽 Paso 2: Adquisición y carga de datos
+
+- Los datos provienen de un software real utilizado en farmacias argentinas:
+✔️ El sistema exporta archivos en formato Excel encriptado. Se realizó un proceso previo de desencriptado y conversión a CSV.
+✔️ Luego se cargaron en Python usando Pandas creando un Dataframe.
+
+- En esta etapa se inspeccionaron columnas, verificaron tipos de datos y se evaluó la calidad inicial (nulos, duplicados).
+
+👉 Resultado: un dataset crudo listo para limpieza y análisis.
+
+### 🔽 Paso 3: Almacenamiento de datos
+
+- Los datos fueron almacenados en una base de datos SQLite para facilitar su acceso, seguridad y reutilización.
+
+- Desde Python se ejecutaron consultas SQL (SELECT, GROUP BY, WHERE) para generar vistas preliminares que sirvieron como base para el análisis exploratorio.
+
+### 🔽 Paso 4: Realización de análisis descriptivo
+
+En esta etapa se trabajó con estadísticas básicas y descriptivas para entender las principales variables del dataset:
+
+✔️ Frecuencia de productos.
+✔️ Distribuciones de ventas.
+✔️ Medidas de tendencia central (media, mediana, moda).
+✔️ Dispersión (desvío estándar) y comportamientos atípicos.
+
+
+### 🔽 Paso 5: Full EDA
+
+Análisis Exploratorio de Datos (EDA)
+
+- Limpieza: eliminación de duplicados y nulos, normalización de texto (sin acentos, minúsculas, sin símbolos).
+- Transformación: conversión de fechas, creación de variables (año, mes, día).
+- Exploración: investigación, consultas al personal de farmacia, productos más vendidos, patrones por mes, comparaciones por categorías.
+- Visualizaiones: gráficos de barras, histogramas y análisis temporal.
+
+### 🔽 Paso 6: Creación de modelo y optimización de parámetros
+
+🔸 Selección del modelo
+- Inicialmente se eligió Random Forest por intuición y buen desempeño esperado.
+- El objetivo era establecer métricas base para luego comparar con otros modelos.
+
+🔸 Estrategia de partición (Train/Test)
+- División inicial: 80% Train / 20% Test.
+- Como los datos están organizados por semanas, una división aleatoria podía dejar productos en Test que no existieran en Train.
+- Se realizó el split por bloques de semanas, garantizando que cada semana (en Train o Test) contenga todos los productos evaluados.
+
+🔸 Primer modelo sin hiperparámetros (Random Forest)
+- RMSE: 4.95
+- R² Test: 69%
+- R² Train: 96%
+  - Se detectó overfitting, esperado en Random Forest sin ajuste fino.
+
+🔸 Optimización de hiperparámetros (Random Forest)
+- Primero se aplicó RandomizedSearchCV.
+- Luego se afinó con GridSearchCV usando los mejores valores encontrados.
+- - Modelo optimizado:
+  -  R² Train: 85%
+  -  R² Test: 70%
+  -  RMSE: 4.87
+
+🔸 Prueba de otros modelos
+- Se evaluaron modelos alternativos.
+- Se seleccionó CatBoost como candidato principal.
+
+✔️ Modelo final (CatBoost ajustado)
+- R² Test: 72%
+- RMSE: 4.70
+- Mejora respecto a Random Forest en capacidad de generalización.
+
+
+
+### 🔽 Paso 7: Visualización e interacción con el modelo - Streamlit
+- Flujo de la aplicación de Streamlit  
+
+🔸 Carga de datos en tiempo real
+   - El usuario sube archivos CSV con ventas recientes. La app ejecuta automáticamente procesos de:
+   - Limpieza de datos
+   - Normalización de texto
+   - Asignación de categorías mediante un diccionario inteligente (JSON) desarrollado durante el EDA  
+
+🔸 Actualización inteligente del histórico
+- La aplicación detecta si los datos cargados son nuevos o duplicados. En función de eso:
+- Actualiza el histórico de ventas
+- Recalcula variables temporales (lags)
+- Garantiza que las predicciones usen siempre la información más reciente
+
+
+🔸Generación de predicciones (Forecasting)
+- La app permite dos modos de análisis:
+    - Modo Individual: selección de un producto y predicción de demanda a 1, 2, 4 u 8 semanas
+    - Modo Global: ranking de productos con mayor demanda proyectada por grupo o categoría
+
+
+🔸 Visualización interactiva de resultados
+- Los resultados se muestran de forma clara mediante:
+- Gráficos de series temporales
+- Tablas comparativas por producto, grupo o categoría
+
+
+🔸Exportación de resultados
+- El usuario puede descargar las predicciones en formato CSV para:
+- Integrarlas en sistemas de gestión internos
+- Facilitar decisiones de compra y stock
+
+
+
+## 📁 Estructura de proyecto
 
 ```
-ml-project-repo/
+sp-ml-20-final-project-g2/
 ├── 📁 data/                # Raw and processed datasets
 │    ├── 📁 interin/        # For intermediate data that has been transformed.
 │    ├── 📁 processed/      # For the final data to be used for modeling.
+          ├──df.pkl
 │    ├── 📁 raw/            # For raw data without any processing.
+          ├──farmacia-datos.db
 ├── 📁 database/            # SQL scripts and database configs
-├── 📁 docs/                # Documentation and presentation materials
 ├── 📁 models/              # Trained model artifacts
-├── 📁 notebooks/           # Jupyter notebooks for EDA and analysis
+     ├──72_Cat_Boost_Regressor.pkl
 ├── 📁 src/                 # Source code modules
-├── 📁 webapp/              # Flask/Streamlit application
+     ├──category_keywords.json
+     ├──EDA.ipynb
+├── 📁 webapp/              # Streamlit application
+     ├──logo_farmacast.png
+     ├──streamlit_app.py
+├── README.md
+├── requirements.txt
 ```
 
-## 🛠️ Technologies Used
+## 🛠️ Tecnologías utilizadas
 
-*[To be updated as we select our tech stack]*
+- Excel
+- Python
+- Pandas
+- NumPy
+- Scikit-learn
+- Matplotlib
+- Seaborn
+- SQLite
+- Randomforest
+- XGBoost
+- CatBoost
+- Streamlit
 
-## 📊 Results
+## 📊 Resultados
 
-*[To be updated with our model performance and insights]*
+✔️ Modelo final (CatBoost ajustado)
+- R² Test: 72%
+- RMSE: 4.70
+- Mejora respecto a Random Forest en capacidad de generalización.
 
-## 🌐 Live Demo
 
-*[Link to be added when the web application is deployed]*
+## 🧠 Valor del Proyecto
+
+✔️ Conecta datos reales con problemas reales
+✔️ Tiene pipeline profesional (CSV → DB → EDA)
+✔️ Apunta a solución de negocio 
