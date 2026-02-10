@@ -252,6 +252,7 @@ sp-ml-20-final-project-g2/
      ├──category_keywords.json
      ├──EDA.ipynb
 ├── 📁 webapp/              # Streamlit application
+     ├──logo_farmacast.png
      ├──streamlit_app.py
 ├── README.md
 ├── requirements.txt
