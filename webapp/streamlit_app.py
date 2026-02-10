@@ -1,5 +1,4 @@
 import streamlit as st
-import numpy as np
 import plotly.express as px
 import pandas as pd
 import pickle
@@ -11,9 +10,7 @@ import base64
 # =====================================================
 # Streamlit configuration
 # =====================================================
-#st.set_page_config(page_title="📦 FarmaCast", layout="wide")
-#st.title("📦 FarmaCast")
-#st.subheader("Predicción de demanda por producto y grupo")
+st.set_page_config(page_title="📦 FarmaCast", layout="wide")
 
 with open("webapp/logo_farmacast.png", "rb") as f:
     logo_base64 = base64.b64encode(f.read()).decode()
@@ -55,8 +52,6 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
-st.set_page_config(page_title="📦 FarmaCast", layout="wide")
 
 st.markdown(
     """
