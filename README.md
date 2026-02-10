@@ -244,13 +244,13 @@ sp-ml-20-final-project-g2/
 │    ├── 📁 processed/      # For the final data to be used for modeling.
           ├──df.pkl
 │    ├── 📁 raw/            # For raw data without any processing.
+          ├──farmacia-datos.db
 ├── 📁 database/            # SQL scripts and database configs
 ├── 📁 models/              # Trained model artifacts
      ├──72_Cat_Boost_Regressor.pkl
 ├── 📁 src/                 # Source code modules
      ├──category_keywords.json
      ├──EDA.ipynb
-     ├──farmacia-datos.db
 ├── 📁 webapp/              # Streamlit application
      ├──streamlit_app.py
 ├── README.md
