@@ -12,7 +12,10 @@ import base64
 # =====================================================
 st.set_page_config(page_title="📦 FarmaCast", layout="wide")
 
-with open("webapp/logo_farmacast.png", "rb") as f:
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+logo_path = os.path.join(BASE_DIR, "logo_farmacast.png")
+
+with open(logo_path, "rb") as f:
     logo_base64 = base64.b64encode(f.read()).decode()
 
 st.markdown(
@@ -106,7 +109,7 @@ if "year" not in df_base.columns:
 
 if "week_start" not in df_base.columns:
     df_base["week_start"] = pd.to_datetime(
-        df_base["year"].astype(str)
+        df_base["year"].astype(str)		
         + "-W"
         + df_base["num_semana"].astype(str).str.zfill(2)
         + "-1",
