@@ -15,8 +15,12 @@ st.set_page_config(page_title="📦 FarmaCast", layout="wide")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 logo_path = os.path.join(BASE_DIR, "logo_farmacast.png")
 
-with open(logo_path, "rb") as f:
-    logo_base64 = base64.b64encode(f.read()).decode()
+if os.path.exists(logo_path):
+    with open(logo_path, "rb") as f:
+        logo_base64 = base64.b64encode(f.read()).decode()
+else:
+    st.sidebar.warning("No se encontró el logo en el deploy. Revisa ruta/nombre o que esté commiteado.")
+    logo_base64 = None
 
 st.markdown(
     """
@@ -75,26 +79,30 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.markdown(
-    f"""
-    <div style="
-        display: flex;
-        align-items: center;
-        margin-top: 0;
-        margin-bottom: 0.3rem;
-    ">
-        <img 
-            src="data:image/png;base64,{logo_base64}"
-            style="
-                height: 220px;
-                width: auto;
-                display: block;
-            "
-        />
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+if logo_base64:
+    st.markdown(
+        f"""
+        <div style="
+            display: flex;
+            align-items: center;
+            margin-top: 0;
+            margin-bottom: 0.3rem;
+        ">
+            <img 
+                src="data:image/png;base64,{logo_base64}"
+                style="
+                    height: 220px;
+                    width: auto;
+                    display: block;
+                "
+            />
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+else:
+    # Fallback si no encuentra el logo en Cloud
+    st.markdown("## FarmaCast")
 
 # =====================================================
 # Load model and base data
