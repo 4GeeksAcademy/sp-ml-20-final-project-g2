@@ -108,7 +108,7 @@ else:
 # Load model and base data
 # =====================================================
 model = pickle.load(open("models/72_Cat_Boost_Regressor.pkl", "rb"))
-df_base = pickle.load(open("data/processed/df.pkl", "rb"))
+df_base = pd.read_parquet("data/processed/df.parquet")
 
 # Ensure year/week_start in df_base (historical data is assumed to be 2025)
 if "year" not in df_base.columns:
